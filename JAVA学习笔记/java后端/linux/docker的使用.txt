@@ -1,0 +1,175 @@
+docker:
+1.docker是一个开源的容器引擎.
+2.可以让开发者打包他们的应用以及依赖到一个容器中
+3.容器完全使用沙箱机制.相互之间不会有任何接口,容器性能开销极低
+
+应用场景:
+1.web应用自动化打包和部署
+
+
+Docker安装:参考菜鸟教程
+https://www.runoob.com/docker/centos-docker-install.html
+
+https://dh3qhdzg.mirror.aliyuncs.com 镜像加速器
+
+
+docker命令
+systemctl start docker  启动
+systemctl restart docker 重启
+systemctl enable docker  设置开机启动
+
+
+1.镜像操作
+    docker images
+        REPOSITORY:镜像仓库来源
+        TAG:镜像的版本
+        IMAGE ID:镜像ID
+        CREATED:镜像的创建事件
+        SIZE:镜像大小
+    说明:查看本机镜像
+
+    docker search [镜像名称]
+        NAME:镜像仓库源的名称
+        DESCRIPTION:镜像的描述
+        OFFICIAL:是否docker官方发布
+    说明:搜索仓库中的镜像
+
+    docker pull ubuntu:13.10
+    说明:从仓库拉取1个镜像
+
+    docker rmi 镜像名称[镜像ID]
+
+    说明:删除镜像
+
+    docker commit -m="news" -a="" e1235 images/ubuntu:v2
+    docker commit -m="描述" -a="镜像作者" 要更新容器ID 目标镜像名
+    说明:更新镜像必须是容器在运行状态,本地镜像仓库会生成1个新的镜像
+
+
+2.容器操作
+    运行命令
+    docker run --help
+    说明:查看run命令的帮助
+
+    docker run hello-world
+    docker run [镜像名称]
+    说明:先看本地镜像仓库谁否存在,不存在会到仓库中心下载
+
+    docker run ubuntu:15.10 /bin/echo "Hello world"
+    docker run 镜像:版本 [执行命令]
+    说明:启动一个容器;指定运行的镜像和版本;如果只有1个版本可以忽略
+
+    docker run -i -t ubuntu:15.10 /bin/bash
+    -i:允许你对容器进行交互
+    -t:在新容器里面指定一个终端
+    说明:启动1个新容器,平且进入容器内部交互
+
+    docker run -d -P ubuntu:15.10 /bin/sh
+    docker run -d -p 8080:80 ubuntu:15.10 /bin/sh
+    docker run -d -p 127.0.0.1:8080:80 ubuntu:15.10 /bin/sh
+    docker run -d -P --name xxx ubuntu:15.10 /bin/sh
+    -d:让容器在后台运行
+    -P:大写P 随机将[本机内部的网络端口]映射到[容器端口]上
+    -p:小写p 指定端口映射 本地ip:本地端口:容器端口
+    --name: 指定1个容器的名称
+    说明:启动容器后不会进入容器里面,会返回一个容器ID
+
+    docker run [选项] 镜像名称 [命令][参数…]
+    完整的运行命令
+
+
+    查看命令
+
+    docker ps
+    查看正在运行的容器
+
+    docker ps -a
+    查看所有容器,包括停止运行的容器
+
+    docker port [容器id]或者[容器名称]
+    查看容器的端口映射情况
+
+    docker top [容器id]
+    查看容器的进程
+
+
+    停止命令:
+
+    docker start|stop|restart [容器id]或者[容器名称]
+    启动|停止|重启 容器运行
+
+    docker start [容器id]或者[容器名称]
+    docker start [选项] 容器名称 [容器名称...]
+    重启容器
+
+    docker rm [容器id]或者[容器名称]
+    移除(删除)容器 。必须是停止状态才能移除。或者加上 -f 强制
+
+    docker inspect [容器id]或者[容器名称]
+    查看容器的配置信息
+
+    ----
+    docker exec -i -t [容器id]或者[容器名称] 命令
+    docker exec -i -t xxxx /bin/bash
+    -i:允许你对容器进行交互
+    -t:在新容器里面指定一个终端
+    进入容器内部,一定要加1个命令,不然进不去容器
+
+    exit命令或者使用CTRL+D来退出容器。
+    不要使用CTRL+C 来退出容器,这样容器会停止运行
+    ----
+
+
+dockerfile镜像脚本
+
+dockerfile命令:
+FROM images_name:TAG   基础镜像,
+MAINTAINER user_name   声明镜像的作者
+ENV key value          设置环境变量(可以写多条)
+RUN command            编译镜像运行时的脚本(可多条).在制作镜像时候要做一些事情,比如创建目录,安装软件,复制文件
+CMD                    设置容器的启动命令,比如启动容器里面的mysql
+ENTRYPOINT             设置容器的入口程序,和CMD很像,可以接收外部参数
+ADD source_dir/file dest_dir/file    将宿主机的文件复制到容器内,如果是一个压缩文件,将会在复制完后自动解压
+WORKDIR path_dir       设置工作目录
+ARG                    设置编译时加入的参数,定义变量
+VOLUMN                 设置容器的挂载卷
+------------
+构建镜像
+docker build --build-arg key=value -t iamges_name path_dir
+说明
+--build-arg 给文件里的参数赋值
+-t iamges_name 定义镜像名字
+path_dir Docketfile文件所在目录
+
+推送镜像
+1.标记镜像,标记镜像后会多出一个镜像文件
+docker tag SOURCE_IMAGE[:TAG] 192.168.10.128:85/jenkins-test/IMAGE[:TAG]
+2.推送
+docker push 192.168.10.128:85/jenkins-test/IMAGE[:TAG]
+3.把Harbor仓库地址加入到Docker信任列表
+vim /etc/docker/daemon.json
+添加 "insecure-registries":["192.168.10.128:85"]
+3.docker登录Harbor
+docker login -u user01 -p Server0308 192.168.10.128:85
+
+https://dh3qhdzg.mirror.aliyuncs.com
+
+
+
+
+
+Harbor
+一个用来存储和分发Docker镜像的企业级仓库服务器
+除Harbor,还有Docker官方提供的Registry(软件)
+相对Registry。Harbor优势更多,用它来搭建私有仓库
+1.传输性能更好
+2.界面友好
+3.集群,权限管理
+
+
+
+
+查看镜像有哪些版本
+curl https://registry.hub.docker.com/v1/repositories/foxiswho/rocketmq/tags\
+| tr -d '[\[\]" ]' | tr '}' '\n'\
+| awk -F: -v image='foxiswho/rocketmq' '{if(NR!=NF && $3 != ""){printf("%s:%s\n",image,$3)}}'

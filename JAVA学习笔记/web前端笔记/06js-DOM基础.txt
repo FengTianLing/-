@@ -1,0 +1,185 @@
+JS的核心:事件驱动
+1.DOM:操作元素
+2.BOM:操作浏览器
+
+
+事件三要素
+1.事件源
+2.事件类型(绑定事件)
+3.事件处理程序
+
+事件的绑定方式
+1.匿名绑定
+2.函数名绑定
+3.行内绑定
+
+
+注意问题:
+1.行内绑定,在函数体中this代表的是window对象,要想拿到事件源本身,需要加参数
+2.绑定函数:使用封装好的函数。如果不带参数,直接绑定函数名;如果带参数,须在在外层绑定匿名函数
+
+JS的加载问题
+1.JS的加载和HTML同步加载的(如果使用元素在定义元素之间,回报错)
+2.window.onload:文本和图片加载完成后的事件,可以解决页面加载完后执行
+
+
+JS的注意问题
+1.如果写[box.属性],在JS代码中没有定义过box变量,会在HTML中寻找ID为box的元素
+
+
+
+事件类型
+onclick:鼠标点击
+ondblclick:鼠标双击
+onkeyup:按下并释放键盘上的一个键时出发
+onchange:文本内容或下拉菜单中的选项发生改变
+onfocus:获得焦点,表示文本框获得鼠标光标
+onblur:失去焦点,表示文本框失去鼠标光标
+onmouseover:鼠标悬停,即鼠标停留在图片的上方
+onmouseout:鼠标移开,即离开图片等所在区域
+onmousedown:鼠标按下事件
+onmouseup:鼠标弹起事件
+onload:网页文档加载事件
+onunload:关闭网页时
+onsubmit:表单提交
+onreset:重置表单
+oninput:输入事件
+onscroll:网页滚动事件
+onresize:浏览器大小改变事件
+onmousewheel:鼠标滚轮事件
+webkitTransitionEnd:动画过度结束事件
+hashchange:监听锚点变化事件,需要绑定到window上
+例子:事件源.onclick = function(){...};
+
+事件监听器(2个)
+addEvenListrner("click";fn);事件绑定的方法,上面的onxxx事件有类似调用属性
+1.这种绑定方式不会层叠调前面相同的事件
+2.这种方法适合团队开发
+3.3个参数，第一:事件类型;第二:绑定的函数;第三:是否事件冒泡
+4.有兼容性问题，浏览器8不支持
+例子:事件源.addEvenListrner("click";fn)
+
+attachEvent("onclick";fn);事件绑定的方法,上面的onxxx事件有类似调用属性
+1.也是事件监听,绑定类型需要带on
+2.区别:addEvenListrner谁调用的,this就是谁;attachEvent是在全局下运行的,this是window对象
+例子:事件源.attachEvent("onclick";fn)
+
+移除事件
+element.onclick = null;
+事件源.removeEventListener("lick";fn)
+事件源.deleteEvent("onclick";fn)
+
+
+
+
+DOM概念:HTML文档对象模型,由节点组成
+1.树形结构,把整个HTML看成一个DOM树
+2.操作DOM节点就是操作HTML的元素,标签节点,属性节点,文本节点
+4.document就代表了整个DOM对象
+
+获取元素节点:nodeType=1
+1.标签数组,习惯性情况下是遍历之后在只用。返回一个标签可以直接使用
+2.如果标签数组只有一个元素,可以通过数组的方式读取document.getElementsByTagName("div")[0];
+document.getElementById("id"):根据ID获取
+document.getElementsByTagName("div"):根据标签名获取
+document.getElementsByClassName("className"):通过类名来获取
+document.getElementsByName("name"):根据name属性来获取
+getElementnodeName("id"):获取整个属性的元数据
+
+获取属性节点nodeType=2
+1.getAttribute("属性名")
+
+
+获取文本节点nodeType=3
+innerHTML 获取标签内的所有内容包含子标签
+innerText 获取标签内的文本内容
+
+
+
+DOM节点的访问关系:都是属性的形式存在,不是方法,不用加括号
+1.都有兼容性问题,解决需要兼容性的语法
+父节点
+parentNode:*
+
+兄弟节点  next:下一个的意思 ; previous:前一个的意思 ; Sibling:兄弟的意思
+nextSibling:
+nextElementSibling
+previousSibling
+previousElementSibling
+
+子节点
+firstChild
+firstElementChild
+lastChile
+lastElementChild
+
+所有子节点:返回数组
+childNodes:包含回车和换行节点
+children:*
+children[index]:*
+
+节点的其他属性
+nodeType:节点的类型
+nodeName:节点的名称
+nodeValue:节点的值
+
+DOM核心
+DOM节点的操作:以方法或函数的访问形式
+创建节点
+1.var node = document.createElement("标签名");
+插入节点
+1.父节点.appendChild("新节点");  在父元素里面的最末尾添加子元素
+2.父节点.insetBefore("新节点","参考节点"); 在父元素里面插入参考节点元素之前
+删除节点
+1.removeChild("子节点")
+克隆节点
+要复制的节点.cloneNode([true]);true表示被复制节点下的所有子节点也一起复制
+替换节点
+父节点.replaceChild("新节点","老节点");
+
+
+节点属性操
+ 元素.属性 或 元素["属性"]:这种方式只能在JS中操作,添加属性不回在显示到HTML文档中
+1.getAttribute("属性名")
+2.setAttribute("属性名","值")
+3.removeAttribute("属性名")
+
+
+style对象
+1.style属性是一个对象
+2.样式少的时候用
+3.值是字符串,没有设置的值是""
+4.style对象里的属性名都是以驼峰命名
+5.设置了类样式,不能获取。(只和行内交互,和内嵌和外链无关)
+
+string box.style.classText = "字符串形式的样式"  设置/获取行内style样式值,字符串返回
+
+获取行内样式和外链样式
+1.获取行内样式
+box.style.width
+box.style["width"]
+2.获取外链样式
+window.getComputedStyle(box1,null).width
+window.getComputedStyle(box1,null)["width"]
+//IE678的方法
+box.currentStyle.width
+box.currentStyle["width"]
+//兼容性写法
+function getStyle(ele,attr){
+    if(window.getComputedStyle){
+        return window.getComputedStyle(ele,null)[attr];
+    }
+    return ele.currentStyle[attr];
+}
+
+
+
+
+
+iframe标签:用来引入另个网站
+
+1.拿到另外一个页面的windos对象
+var ifwindowObj = iframeBox.contentWindow;
+
+2.拿到document对象
+var ifDocumentObj = iframeBox.contentWindow.document;

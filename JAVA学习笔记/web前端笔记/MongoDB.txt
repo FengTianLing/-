@@ -1,0 +1,44 @@
+MongoDB
+
+1.插入数据语法:
+    db.集合名称.insert(josn);
+    db.集合名称.save(josn);
+    db.集合名称.insertOne(josn);
+    db.集合名称.insertMany(josn);
+    1.可以是个json变量
+    2.如果不指定 _id 字段 save() 方法类似于 insert() 方法。如果指定 _id字段,则会更新该_id的数据。
+    3.如果集合不存在,会先创建集合
+
+2.更新数据语法
+    db.集合名称.update(<query>,<update>,{upsert: <boolean>,multi: <boolean>,writeConcern: <document>});
+    2.1query:update的查询条件,类似sql update查询内where后面的。
+    2.2update: update的对象和一些更新的操作符（如$,$set...）等,也可以理解为sql update查询内set后面的
+    2.3upsert: (可选),这个参数的意思是,如果不存在update的记录,是否插入objNew,true为插入,默认是false,不插入。
+    2.4multi: (可选),默认是false,只更新找到的第一条记录,如果这个参数为true,就把按条件查出来多条记录全部更新。
+    2.5writeConcern:(可选),抛出异常的级别。
+
+
+3.删除数据语法
+
+4.查询数据语法
+    db.集合名称.find(josn);
+    例子:db.st.find({"name":"xxx"});
+    例子:db.st.find({"o.属性":"xxx"});
+    例子:db.st.find({"o.属性":{$gt:20}});大于
+    例子:db.st.find({$or:[{key,val},{key,val}]});或
+    4.1多级深层关系用点.
+    4.2key 可以用关系符号
+
+
+5.分页查询
+    db.集合名称.find(josn).limit(size).skip((page-1)*size);分页
+    db.集合名称.stats();统计总数
+
+6.索引
+    db.集合名称.createIndex({key:1},{约束:true});创建索引,key表示字段
+    缺点:插入效率降低,会去索引表先看应该插入的位置.如果集合被清空,索引依然存在
+    优点:检索效率提升
+
+
+
+.explain();可以查看检索的过程

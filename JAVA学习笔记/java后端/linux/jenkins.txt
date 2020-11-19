@@ -1,0 +1,317 @@
+持续继承 以及 Jenkins介绍
+
+
+1.软件开发的生命周期(5点)
+    1.1需求分析:公司内部;客户提出
+    1.2设计:包括技术选型,有那些功能,如何去完成
+    1.3实现:代码实现,一般由项目经理带领我们
+    1.4测试:功能测试,代码测试,压力测试
+    1.5进化:优化和维护;提出改进和优化建议
+
+2.软件瀑布模型
+    经典软件开发模型。瀑布的水从上往下,不能逆转,按部就班。
+    简单说,如果项目已经进入软件测试阶段,不能在回到设计阶段。
+    优点:简单易用和理解;当1个阶段完成,只需关心后续阶段;按项目阶段划分检查节点
+    缺点:模式太固定,阶段之间产生大量的文档来指导后续工作,耗时;
+        由于线性的,只有等到项目末期才能看到开发成果,增加了风险;不适应客户需求的变更。
+
+3.敏捷式开发模型
+    核心:迭代开发,增量开发
+    迭代开发:把项目的整个大周期划分成一个个小周期来完成.
+    增量开发:和迭代相关,每个小周期要产生一个可用的版本。
+    好处:早期交付,降低项目风险。回款快。
+    每个周期迭代,要遵守一个软件开发的生命周期过程(5点)
+
+举例说明两种模式:
+    房地产公司要开发10栋房子,按照瀑布模型,会先把10栋楼的地基先打好,然后盖房顶,然后装修,一起开工来把10栋房子做好。
+    按照敏捷式开发模型,可以先进行一次迭代,先做1栋楼,打地基,做房顶,装修等,做好1栋。10栋楼就是10次的迭代。
+
+
+4.什么是持续集成
+    持续集成,简称CI。频繁的(一天多次)将代码集成到仓库主干。
+    目的:让产品快速迭代,同时还能保证代码的高质量。(必须通过自动化测试,只要有1个测试用例失败,就不能集成)
+    通过持续集成,团队可以快速的从一个功能到另外一个功能。敏捷式开发很大一部分归功于持续集成
+    流程:
+        提交:代码的提交
+        测试:第一轮,可以用自动化测试来完成。
+        构建:项目打包。项目编译打包成可运行的文件。
+        测试:第二轮测试.如何第一轮测试内容已经涵盖了,可以忽略。
+        部署:项目发布到生产服务器上
+        回滚:比如本次部署的版本有问题,回滚到上一个版本
+    组成要素:
+        一个【自动化】构建过程,从代码的检出,编译构建,运行测试,结果记录,测试统计等都是自动完成,不需要人工干预
+        一个代码仓库,svn或者git。开发人员提交到这里,Jenkins也从这里拉取构建发布
+        一个持续集成服务器,Jenkins就是一个配置简单和使用的持续集成服务器
+    好处:
+        (1):降低风险,由于持续不断的构建,编译和测试,可以在早期就发现存在的问题,修复代价就少。
+        (2):对系统健康持续检查,减少发布风险带来的问题
+        (3):减少重复性的工作
+        (4):持续部署,提供可部署的单元包(war)
+        (5):持续交付可供使用的版本
+        (6):增强团队信心
+
+---------------------------------------------------------
+Jenkins
+    1.开源的持续集成部署工具,由于是JAVA编写,更适合持续集成部署JAVA项目
+    2.安装简单,安装方式很多
+    3.支持邮件发送;测试报告,构建报告
+    4.支持分布式构建,能够多台计算机一起构建测试
+    5.目前流行的持续集成部署工具
+
+1..Jenkins安装(忽略,阅读word文档)
+
+2.插件安装(忽略,阅读word文档,推荐安装插件);
+    2.1 Chinese:中文汉化插件
+    2.2 Role-based Authorization Strategy:权限管理插件,jenkins本身权限管理比较粗粒度
+    2.3 Credentials Binding:凭证管理插件;主要用来管理git仓库,生产服务器的一些凭证
+    2.4 Git:用来拉取代码,在插件列表最后面
+    2.5 Deploy to container:部署到tomcat的插件
+    2.6 Maven Integration:用来构建Maven项目
+    2.7 Pipeline:用来构建流水线项目
+    2.8 Publish Over SSH 发送命令让远程服务器执行
+    2.9 NodeJs:用来构建前端项目
+    2.10 Extended Choice Parameter:参数化构建中的多选参数类型插件,多选框勾选项目部署
+
+
+3.权限管理
+    3.1.先安装Role-based插件
+    3.2 Jenkins->Configure Global Security->授权策略选择Role-Based Strategy保存
+    3.2.进入菜单Jenkins-> Manageand Assign Roles -> Manage Roles(管理角色)
+        Global roles:全局角色,软件Jenkins管理员的角色
+        Item roles:项目角色,不同项目不同的角色
+        Node roles:节点角色,Jenkins主从配置
+        Pattern:类似于正则,表示这个角色能访问哪些项目; anjun.*
+    3.3.进入Jenkins-> Manage Users -> 新建用户
+    3.4.进入菜单Jenkins-> Manageand Assign Roles -> Assign Roles(分配角色)
+
+4.凭证管理
+    4.1先安装 Credentials Binding插件
+    4.2进入凭证->全局->添加凭凭证。创建一个Git仓库的凭着 ID字段可忽略
+    如果是SSH类型,需要在Jenkins服务器上生成公私钥,把公钥绑定到git仓库上,Jenkins配置私钥
+    主要用来管理git仓库,生产服务器的一些凭证,共后续配置选择这些凭证
+
+5.Git管理配置
+    5.1先安装Git插件
+    5.2配置一个项目的git仓库:随便选择一个测试项目。配置git地址,选择凭证
+    5.3Build now :尝试构建,然后看控制台输出 /var/lib/jenkins/workspace/anjun01
+
+6.Maven管理配置
+    6.1进入菜单 Manage Jenkins >  Global Tool Configuration
+    6.2配置JDK:配置jenkins服务器下的jdk目录(取消安装),名称随便 /usr/local/jdk1.8
+    6.3配置Maven :配置jenkins服务器下的maven目录(取消安装),名称随便 /usr/local/maven-3.6.1
+    6.4进入菜单 Manage Jenkins > Configure System > 勾选全局属性 Environment variables 。让jenkins感知的环境变量
+        JAVA_HOME  /usr/local/jdk1.8
+        M2_HOME  /usr/local/maven-3.6.1
+        PATH+EXTRA  $M2_HOME/bin
+
+7.构建项目
+    7.1随便打开1个项目,进入配置
+    7.2构建>添加构建步骤>execute shell>输入 mvn clean package 
+    7.3Build now:构建,看控制台输出
+
+8.配置生产服务器tomcat的角色
+    8.1 修改 conf/tomcat-users.xml 
+    8.2 修改 webapps/manager/META-INF/content.xml 注释掉 
+    <!-- <Value class="org...Remo...value" allow="127.0.0.0....01">  -->
+
+9.构建后操作
+    9.1 安装 Deploy to container 插件
+    9.2 随便进入一个项目,进入配置
+    9.3 构建后操作>新增构建后操作>Deploy war..
+    9.4 WAR/EAR files填写 "target/*.war" 不用加双引号,war包的位置
+    9.5 Containers 添加一个tomcat8.x容器 选择凭证和tomcat的地址
+    9.6 Build now:构建,看控制台输出
+
+
+能到这一步,已经成功一一半了,加油;已经成功做好了项目构建的铺垫
+---------------------------------------------
+
+Jenkins构建Maven项目
+    1.自动构建项目类型很多,常见的有以下三种类型
+        自由风格软件项目:支持多语言的项目进行构建,不一定是用maven
+        MAVEN项目:针对JAVA语言的maven项目进行构建,与自由风格不同点再构建配置上
+        流水线项目:灵活度高。使用代码的形式构建项目过程
+            可以构建一些非常复杂的项目。重点讲解
+    2.只是操作方式,灵活度有些区别,实现的结果是一样的
+    3.不同插件实现不同的构建类型
+
+自由风格构建
+1.新建一个项目,选择自由风格(Freestyle Project)
+2.配置git仓库
+3.配置构建shell: mvn clean package
+4.配置构建后操作,就是配置tomcat的用户和密码和地址.必须完成前面的步骤8tomcat角色和步骤9
+总结:配置分散;不需要掌握太多的基础知识
+
+MAVEN项目构建
+1.安装 Maven Integration 插件
+2.新建1个项目,选择maven项目
+3.配置git仓库
+4.配置Build Goals and options:clean package  就是maven命令
+    Root POM:如果还有子项目,要写上子项目的pom.xml路径
+5.构建后操作:和自由风格构建一样
+总结:
+
+
+流水线项目构建(重点讲解)
+1.可以将原来1个或者多个的节点任务连接起来,实现单个任务难以完成的复杂流程编排和可视化工作
+2.可以将零散的配置集中再1个地方配置完成
+3.可以以编码的形式控制整个构建流程,管理集中方便
+4.Pipeline脚本由Groovy语言实现,声明式脚本和脚本方式
+5.脚本存放方式可以写再jenkins项目中,也可以写再项目代码仓库中
+
+
+简单语法介绍
+声明方式:pipeline开头
+pipeline {
+   agent any//书写环境;docker环境,jdk工具
+
+   stages {//一般情况下只有1个,所有步骤
+      stage('pull code') {//stage阶段,可以多个阶段,括号是阶段声明
+         steps {//步骤,每个阶段都有多个步骤
+            echo 'pull code'//步骤动作,支持多语言
+         }
+      }
+      stage('build project') {
+         steps {
+            echo 'build project'
+         }
+      }
+      stage('publish project') {
+         steps {
+            echo 'publish project'
+         }
+      }
+   }
+}
+
+脚本式:node开头
+node {
+   def mvnHome ////书写环境;docker环境,jdk工具
+   stage('pull code') { //阶段
+      echo 'pull code' //步骤
+   }
+   stage('Build project') {
+      echo 'Build project'//语法糖 sh "mvn clean package" sh是shell脚本语法
+   }
+   stage('publish') {
+      echo 'publish project' 
+   }
+}
+
+
+使用(6开始往后是延申)
+1.安装Pipeline插件
+2.创建1个流水线项目
+3.使用HelloWorld模板
+4.进入流水线语法
+  4.1示例步骤选择checkout:Check out from version control来配置git仓库生成语法.黏贴到steps里面(拉取代码)
+  4.2示例步骤选择sh:Shell Script,Shell Script框里输入 mvn clean package 然后生成语法(打包语法)
+  4.3示例步骤选择 deploy:Deploy war/ear to a container(发布到容器) 参数和Maven项目配置一样
+5.总结:完成.
+  把脚本放在Jenkins的UI界面里面,维护起来比较麻烦.
+  而且没有进行版本控制.没办法备份历史修改。如果服务器奔溃,脚本也会丢失
+  所有建议把脚本放到项目中去,建立一个脚本文件
+6.JAVA项目中新建jenkins文件,把脚本复制到这个文件来
+7.Jenkins项目配置i
+  7.1定义:Pipeline script from SCM(脚本文件来自版本控制GIT)
+
+
+Jenkins构建触发器:简单说就是在什么时候,什么条件,触发项目的构建。5个触发器
+前4个触发器性能不佳。第5个触发器,利用GitLab的webhook实现代码推送到仓库,立即触发项目自动触发。网页钩子
+1.触发远程构建:
+  通过一个远程地址,触发项目的构建。地址需要携带一个令牌。
+  1.1在Jenkins项目配置中,勾选[远程触发]配置,配置Token,根据描述里面的地址触发即可
+
+2.其他工程构建后触发:
+  某项目需要依赖另外一个项目的构建来完成。
+  2.1在Jenkins项目配置中,勾选[Build after oher project are built]配置
+  2.2关注工程写上Jenkins里的其他工程名,多个用逗号隔开
+  2.3当配置里的项目构建后,本项目就会被触发构建
+
+
+3.定时构建(少用)
+  顾名思义,需要了解定时表达式规则.从左往右分别是:分 时 日 月 周
+  3.1在Jenkins项目配置中,勾选[Build periodically]配置
+
+
+4.轮询SCM(版本控制)(不用,耗资源)
+  定时扫描仓库代码,感知代码变化.如果有变化就触发项目构建。需要了解定时表达式规则
+  注意:扫描是扫描本地整个项目的代码,增大系统开销,不建议使用
+  4.13.1在Jenkins项目配置中,勾选[Poll SCM]配置
+
+5.Git hook自动触发构建
+  仓库代码变更,就自动触发Jenkins自动构建。相比轮询SCM好得多。需要安装插件
+  5.1安装GitLab Hook 和GitLab两个插件
+  5.2在Jenkins项目配置中会多出一个触发器,勾选[Build when a ....GitLab URL:http:...]配置,其他默认
+  5.3GitLab-->settings-->network-->Outbound request-->勾选Allow request to the local network from web hooks and services
+  5.4仓库项目-->settings-->Intagrantions-->URL  和 push envents 触发器勾选即可
+  5.5打开Jenkins接收请求功能:Manage Jenkins->Configure System->Gitlab反选不要勾上.Gitlab connections节点也删除掉
+
+jenkins的参数化构建
+在项目构建过程中,我们需要动态输入一些参数,从而影响到构建的结果。可以使用参数化构建
+1.进入jenkins项目的配置
+2.勾选This project is parameterized
+3.添加参数
+4.修改JAVA项目里面的Jenkins配置文件。配置文件读取参数的语法类似于jsp里的el表达式${name}
+
+
+jenkins的参数化构建(多选)
+1.安装 Extended Choice Parameter 插件
+2.进入jenkins项目的配置
+3.选择Extended Choice Parameter
+4.输入name(定义变量名)
+5.选择Basic Parameter Types-选择Check Boxes
+5.Number of Visible Items 输入项目数量
+6.Delimiter 输入分割符号,逗号
+7勾选value :输入全部项目名称,都逗号隔开 项目名@端口[,项目名@端口]
+8.默认值和描述,都是勾选value.填写项目顺序要一致即可
+9.在jenkins配置文件中,接收到的是一个逗号拼接的字符串
+
+----------------------------------------------------------------
+以下不是重点了
+
+Jenkins配置邮箱服务器
+1.安装Email Extension Template插件
+2.Manage Jenkins->Configure System
+3.设置邮件参数Extended E-mail Notification即可
+4.Content Token Reference可以查看Jenkins的变量
+5.修改JAVA项目的Jenkins配置文件,添加POST标记,读取模板
+
+
+Jenkins代码审查
+通过工具或者软件快速定位到代码里面存在的一些风险。或者明显错误。
+方便后续部署的时候降低风险,减少错误。
+Jenkins本身没有代码审查功能,需要结合第三方工具来完成。
+sonarQube:用于管理代码质量的开放平台
+
+Jenkins配置NodeJs环境
+1.安装NodeJs插件
+2.Manage Jenkins->Global Tool Configuration
+3.NodeJs-新增-选择双数的版本(不要选择单数)-其他默认不变
+4.应用保存即可
+
+
+
+
+
+---------------------------------------------------------------------
+
+根据凭证ID生成语法
+1.进入流水线语法
+2.片段生成器->选择:withCredentials:Bind credentials to variables
+3.新增选择 Username and password (separated)
+4.定义用户名变量,定义密码变量
+5.生成语法得到一个函数,复制到jenkins配置文件中使用
+
+
+
+jenkins发送远程命令到生成服务器
+1. 安装 Publish Over SSH 插件
+2. 把[公钥]拷贝到远端服务,进入.ssh目录执行 ssh-copy-id [ip]  
+2. Manage Jenkins->Configure System->Publish over SSH
+  2.1Path to key:/root/.ssh/id_rsa  (本地[私钥]路径)
+  2.2添加远程服务器
+  2.3Name:test自定义服务器名称  
+     Hostname:192.168.10.128服务器IP 
+     Username:root用户名 
+     Remote Directory:/ 连上后所在目录

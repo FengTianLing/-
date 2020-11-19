@@ -1,0 +1,117 @@
+1，OOP：面向对象编程
+	#说明：OOP引入封装、继承和多态性等概念来建立一种对象层次结构，用以模拟公共行为的一个集合。
+2，AOP：面向切面编程	
+	#说明：AOP基于IoC基础，是对OOP的有益补充，OOP允许你定义从上到下的关系，但并不适合定义从左到右的关系。
+	##简单说就是那些与业务无关，却为多个业务模块所共同调用的逻辑或责任封装起来，便于减少系统的重复代码，降低模块之间的耦合度，并有利于未来的可操作性和可维护性
+	#原理：基于代理模式的方式实现，在调用目标方法之前会先调用代理类的目标方法，然后由代理类返回调用结果。spring aop使用了动态代理的代理方式
+	#核心概念：
+		#切面：散落在系统各处的通用的业务逻辑代码，如上图中的日志模块，权限模块，事务模块等，切面用来装载pointcut和advice
+		#通知：所谓通知指的就是指拦截到连接点之后要执行的代码，通知分为前置、后置、异常、最终、环绕通知五类
+		#连接点：被拦截到的点，因为Spring只支持方法类型的连接点，所以在Spring中连接点指的就是被拦截到的方法，实际上连接点还可以是字段或者构造器
+		#切入点：拦截的方法，连接点拦截后变成切入点
+		#目标对象：代理的目标对象，指要织入的对象模块，如上图的模块一、二、三
+		#织入：通过切入点切入，将切面应用到目标对象并导致代理对象创建的过程
+		#AOP代理：AOP框架创建的对象，包含通知。在Spring中，AOP代理可以是JDK动态代理或CGLIB代理
+	#例子：假如业务模块一、二、三都需要日志记录，那么如果都在三个模块内写日志逻辑，那么会有两个问题：
+		#1，打破模块的封装性 
+		#2，有很多重复代码 
+		#解决重复代码问题，可以通过封装日志逻辑为一个类，然后在各个模块需要的地方通过该类来试下日志功能，但是还是不能解决影响模块封装性的问题。 
+		#那么AOP就可以解决，它使用切面，动态地织入到各模块中（实际就是使用代理来管理模块对象），这样既解决了重复代码问题又不会影响模块的封装性
+
+3，IOC：控制反转
+	#说明：可以用来减低计算机代码之间的耦合度，将所有的bean交由spring管理，其依赖的原理是依赖注入（Dependency Injection，简称DI）
+	#优点：降低代码之间的耦合度，实现开闭原则
+	#实现：
+		#读取注解或配置文件，获取所需要的service，拿到类名
+		#使用反射，基于类名实例化对应的对象实例
+		#将对象实例，通过构造函数或者setter，传递给调用者
+4，事务
+	#说明：Spring事务 的本质其实就是数据库对事务的支持，没有数据库的事务支持，spring是无法提供事务功能的。对于纯JDBC操作数据库，想要用到事务，可以按照以下步骤进行：
+	##获取连接 Connection con = DriverManager.getConnection()
+	##开启事务con.setAutoCommit(true/false);
+	##执行CRUD
+	##提交事务/回滚事务 con.commit() / con.rollback();
+	##关闭连接 conn.close();
+	##使用Spring的事务管理功能后，我们可以不再写步骤 2 和 4 的代码，而是由Spirng 自动完成。 那么Spring是如何在我们书写的 CRUD 之前和之后开启事务和关闭事务的呢？解决这个问题，也就可以从整体上理解Spring的事务管理实现原理了。下面简单地介绍下，注解方式为例子
+	##配置文件开启注解驱动，在相关的类和方法上通过注解@Transactional标识
+	##spring 在启动的时候会去解析生成相关的bean，这时候会查看拥有相关注解的类和方法，并且为这些类和方法生成代理，并根据@Transaction的相关参数进行相关配置注入，这样就在代理中为我们把相关的事务处理掉了（开启正常提交事务，异常回滚事务）。
+	##真正的数据库层的事务提交和回滚是通过binlog或者redo log实现的。
+
+	#Spring事务机制主要包括声明式事务和编程式事务，此处侧重讲解声明式事务，编程式事务在实际开发中得不到广泛使用，仅供学习参考。
+	#声明式事务：Spring声明式事务让我们从复杂的事务处理中得到解脱，使得我们再也不必去处理获得连接、关闭连接、事务提交和回滚等这些操作，再也无需我们在与事务相关的方法中处理大量的try…catch…finally代码。 
+	##我们在使用Spring声明式事务时，有一个非常重要的概念就是事务属性。事务属性通常由事务的传播行为、事务的隔离级别、事务的超时值、事务只读标志组成。我们在进行事务划分时，需要进行事务定义，也就是配置事务的属性。 
+	#事务的传播属性(7种)：
+		#PROPAGATION_REQUIRED：支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择，也是 Spring 默认的事务的传播。
+		#PROPAGATION_REQUIRES_NEW：新建事务，如果当前存在事务，把当前事务挂起。新建的事务将和被挂起的事务没有任何关系，是两个独立的事务，外层事务失败回滚之后，不能回滚内层事务执行的结果，内层事务失败抛出异常，外层事务捕获，也可以不处理回滚操作
+		#PROPAGATION_SUPPORTS：支持当前事务，如果当前没有事务，就以非事务方式执行。
+		#PROPAGATION_MANDATORY：支持当前事务，如果当前没有事务，就抛出异常。
+		#PROPAGATION_NOT_SUPPORTED：以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。
+		#PROPAGATION_NEVER：以非事务方式执行，如果当前存在事务，则抛出异常。
+		#PROPAGATION_NESTED：如果一个活动的事务存在，则运行在一个嵌套的事务中。如果没有活动事务，则按REQUIRED属性执行。它使用了一个单独的事务，这个事务拥有多个可以回滚的保存点。内部事务的回滚不会对外部事务造成影响。它只对DataSourceTransactionManager事务管理器起效。
+	
+	#隔离级别
+		#ISOLATION_DEFAULT：这是个 PlatfromTransactionManager 默认的隔离级别，使用数据库默认的事务隔离级别。
+		#下面四个与 JDBC 的隔离级别相对应。
+		#ISOLATION_READ_UNCOMMITTED：这是事务最低的隔离级别，它充许另外一个事务可以看到这个事务未提交的数据。这种隔离级别会产生脏读，不可重复读和幻像读。
+		#ISOLATION_READ_COMMITTED：保证一个事务修改的数据提交后才能被另外一个事务读取。另外一个事务不能读取该事务未提交的数据。
+		#ISOLATION_REPEATABLE_READ：这种事务隔离级别可以防止脏读，不可重复读。但是可能出现幻像读。
+		#ISOLATION_SERIALIZABLE：这是花费最高代价但是最可靠的事务隔离级别。事务被处理为顺序执行。
+
+	#事务的嵌套
+		#假设外层事务 Service A 的 Method A() 调用 内层Service B 的 Method B()
+			#PROPAGATION_REQUIRED(spring 默认)：如果ServiceB.methodB() 的事务级别定义为 PROPAGATION_REQUIRED，那么执行 ServiceA.methodA() 的时候spring已经起了事务，这时调用 ServiceB.methodB()，ServiceB.methodB() 看到自己已经运行在 ServiceA.methodA() 的事务内部，
+			##就不再起新的事务。假如 ServiceB.methodB() 运行的时候发现自己没有在事务中，他就会为自己分配一个事务。这样，在 ServiceA.methodA() 或者在 ServiceB.methodB() 内的任何地方出现异常，事务都会被回滚。
+			
+			#PROPAGATION_REQUIRES_NEW：比如我们设计 ServiceA.methodA() 的事务级别为 PROPAGATION_REQUIRED，ServiceB.methodB() 的事务级别为 PROPAGATION_REQUIRES_NEW。那么当执行到 ServiceB.methodB() 的时候，ServiceA.methodA() 所在的事务就会挂起，
+			##ServiceB.methodB() 会起一个新的事务，等待 ServiceB.methodB() 的事务完成以后，它才继续执行。他与 PROPAGATION_REQUIRED 的事务区别在于事务的回滚程度了。因为 ServiceB.methodB() 是新起一个事务，那么就是存在两个不同的事务。如果 ServiceB.methodB() 已经提交，
+			##那么 ServiceA.methodA() 失败回滚，ServiceB.methodB() 是不会回滚的。如果 ServiceB.methodB() 失败回滚，如果他抛出的异常被 ServiceA.methodA() 捕获，ServiceA.methodA() 事务仍然可能提交(主要看B抛出的异常是不是A会回滚的异常)。
+
+			#PROPAGATION_SUPPORTS：假设ServiceB.methodB() 的事务级别为 PROPAGATION_SUPPORTS，那么当执行到ServiceB.methodB()时，如果发现ServiceA.methodA()已经开启了一个事务，则加入当前的事务，如果发现ServiceA.methodA()没有开启事务，则自己也不开启事务。这种时候，内部方法的事务性完全依赖于最外层的事务。
+
+			#PROPAGATION_NESTED：现在的情况就变得比较复杂了, ServiceB.methodB() 的事务属性被配置为 PROPAGATION_NESTED, 此时两者之间又将如何协作呢?  ServiceB#methodB 如果 rollback, 那么内部事务(即 ServiceB#methodB) 将回滚到它执行前的 SavePoint 而外部事务(即 ServiceA#methodA) 可以有以下两种处理方式:
+				#捕获异常，执行异常分支逻辑，这种方式也是嵌套事务最有价值的地方, 它起到了分支执行的效果, 如果 ServiceB.methodB 失败, 那么执行 ServiceC.methodC(), 而 ServiceB.methodB 已经回滚到它执行之前的 SavePoint, 所以不会产生脏数据(相当于此方法从未执行过), 这种特性可以用在某些特殊的业务中, 而 PROPAGATION_REQUIRED 和 PROPAGATION_REQUIRES_NEW 都没有办法做到这一点
+					void methodA() { 
+						try { 
+							ServiceB.methodB(); 
+						} catch (SomeException) { 
+							// 执行其他业务, 如 ServiceC.methodC(); 
+						} 
+					}
+					
+				#外部事务回滚/提交代码不做任何修改, 那么如果内部事务(ServiceB#methodB) rollback, 那么首先 ServiceB.methodB 回滚到它执行之前的 SavePoint(在任何情况下都会如此), 外部事务(即 ServiceA#methodA) 将根据具体的配置决定自己是 commit 还是 rollback
+
+			#另外三种事务传播属性基本用不到，在此不做分析
+
+5，springmvc工作机制
+	第一步：用户发起请求到前端控制器（DispatcherServlet）
+	第二步：前端控制器请求处理器映射器（HandlerMappering）去查找处理器（Handle）：通过xml配置或者注解进行查找
+	第三步：找到以后处理器映射器（HandlerMappering）像前端控制器返回执行链（HandlerExecutionChain）
+	第四步：前端控制器（DispatcherServlet）调用处理器适配器（HandlerAdapter）去执行处理器（Handler）
+	第五步：处理器适配器去执行Handler
+	第六步：Handler执行完给处理器适配器返回ModelAndView
+	第七步：处理器适配器向前端控制器返回ModelAndView
+	第八步：前端控制器请求视图解析器（ViewResolver）去进行视图解析
+	第九步：视图解析器向前端控制器返回View
+	第十步：前端控制器对视图进行渲染
+	第十一步：前端控制器向用户响应结果
+
+6，连接池原理及种类
+	#HikariCP：Hikari日语中为光的意思，前身是BoneCP，BoneCP2013年不再更新
+	#Druid：功能比较全面，且扩展性较好，比较方便对jdbc接口进行监控跟踪等。
+	#dbcp：是apache上的一个 java 连接池项目，也是 tomcat 使用的连接池组件。
+	#tomcat-jdbc：同样是apache产品，在tomcat7.0用来替换掉dbcp，因为dbcp是单线程，在高并发下性能差等，具体可查看官网说明：https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html#Introduction
+	#c3p0：在高并发下性能极差，太古老，代码及其复杂，不利于维护。不推荐使用
+	#对比结论：
+		#1：性能方面 hikariCP>druid>tomcat-jdbc>dbcp>c3p0 。hikariCP的高性能得益于最大限度的避免锁竞争。
+	   #2：druid功能最为全面，sql拦截等功能，统计数据较为全面，具有良好的扩展性。
+	   #3：综合性能，扩展性等方面，可考虑使用druid或者hikariCP连接池。
+	   #4：可开启prepareStatement缓存，对性能会有大概20%的提升。
+	#性能比较：http://freeman1.iteye.com/blog/2268874
+
+7，spring中使用的设计模式
+	#单例模式：这个比如在创建bean的时候
+	#工厂模式：这个很明显，在各种BeanFactory以及ApplicationContext创建中都用到了
+	#代理模式：在Aop实现中用到了JDK的动态代理
+	#模版方法模式：Spring中的JdbcTemplate
+	#策略模式：在Aop的实现中，采用了两种不同的方式，JDK动态代理和CGLIB代理
+	#观察者模式：如ApplicationListener

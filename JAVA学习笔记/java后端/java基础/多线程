@@ -1,0 +1,11 @@
+多线程
+
+###
+synchronized和lock的区别
+1.synchronized是JVM层面实现的,JAVA提供的关键字,Lock是API层面的锁。
+2.synchronized不需要手动释放锁,底层会自动释放;lock则需要手动释放,否则有可能导致死锁。
+3.synchronized等待不可以中断,除非抛出异常会执行完成;lock可以中断,通过interrupt()可中断。
+4.synchronized是非公平锁,lock默认是公平锁,当传入false时是非公平锁。
+5.synchronized不可绑定多个条件,lock可实现分组唤醒需要唤醒的锁。
+
+

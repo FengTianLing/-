@@ -1,0 +1,83 @@
+PHP的简单语法
+
+1.代码必须由<?php  ...  ?>单标签包裹
+2.使用$来声明变量  $str = '123';
+3.echo 关键字输出  echo $str;
+4.header('content-type:text/html;charset=utf-8');php中的预定函数
+5..是连接符字符串拼接
+6 数组使用 $arry = array('a','b');  $arry[0]
+7.Map的使用   $map = array('a'=>'a1','b'=>'b1');  $map['b']
+8单引号和双引号的区别。单引号:就是普通字符串  双引号:如何字符串和变量名一样,取变量值
+9. $_GET['name'];  $_POST['name'] 获取表单数据 全局对象
+10.print_r($变量); 输出变量内容
+11.$_FILES('');获取上传的文件 返回值是一个数组
+12 move_uploaded_file(要移动的文件,新位置) 将上传的文件移动到新位置 
+
+
+AJAX认识
+
+1.XMLHttpRequst 异步请求对象
+
+API
+open(method,url,async): 请求的类型/请求url/true（异步）或 false（同步）
+send(string):请求发送  参数仅仅用于post请求
+setRequestHeader(header,value):设置请求消息头
+setRequestHeader("Content-type","application/x-www-form-urlencoded");发送POST携带参数必须设置
+
+属性
+readyState:状态属性 0-4  
+status:响应状态 200 或 404
+onreadystatechange:用来绑定事件回调处理方法,每次状态发生改变会执行一次
+responseText:字符串响应接收属性
+responseXML:XML响应接收属性
+
+
+
+
+
+跨域问题
+
+1.JSONP:最早的解决方案,利用script标签可以跨域的原理实现
+    限制:需要服务的支持,只能发起get请求
+
+
+什么是CORS
+1.Cors是W3C的标准.它允许浏览器向服务器发送跨域[AJAX请求].
+2.目前所有浏览器都支持,IE10不行。
+3.整个CORS通信过程,都是浏览器自动完成,不需要用户参与。(前端不需要写代码)
+4.跨域请求时,浏览器会在请求中携带一些头信息,我们服务器端需要判断是否允许跨域,然后再响应头中加入一些信息即可。(JAVA后台过滤器)
+5.ajax请求分为[简单请求]和[特殊请求]
+简单请求:
+    1:满足HEAD,GET,POST请求方式其中一种
+    2:请求头部不超出以下几个字段[Accept,Accept-Language,Content-Language,Last-Event-ID,Content-Type]
+    3:浏览器发简单请求,头部会携带[Origin].Origin中会指出当前请求属于哪个域（协议+域名+端口）。服务会根据这个值决定是否允许其跨域。
+    4.如果服务器允许跨域,服务器需要再响应头携带
+    Access-Control-Allow-Origin: http://manage.leyou.com  //可接受的域，是一个具体域名或者*（代表任意域名）
+    Access-Control-Allow-Credentials: true //是否允许携带cookie,默认情况下,cors不会携带cookie，除非这个值是true
+特殊请求
+    1.不符合简单请求的,浏览器会定位特殊请求,比如请求方式PUT
+    2.再通信之前,会添加一次HTTP查询请求,称为"预检"请求
+    3.浏览器先询问服务器,当前页面域名是否再服务器的名单里,以及可以使用哪些HTTP动词和头部字段.只有得到肯定答复,浏览器才会正式的ajax请求,否者报错。
+    "预检"例子
+    OPTIONS /cors HTTP/1.1
+    Origin: http://manage.leyou.com
+    Access-Control-Request-Method: PUT  //询问服务端,我这种方式允许跨域吗
+    Access-Control-Request-Headers: X-Custom-Header //询问服务端,是否允许携带这个消息头
+    Host: api.leyou.com
+    Accept-Language: en-US
+    Connection: keep-alive
+    User-Agent: Mozilla/5.0...
+    4.与简单请求相比,除了Origin以外
+    Access-Control-Request-Method:接下来会用到的请求方式，比如PUT
+    Access-Control-Request-Headers:会额外用到的头信息
+    5.如果允许跨域,会响应
+    Access-Control-Allow-Methods:允许访问的方式
+    Access-Control-Allow-Headers:允许携带的头
+    Access-Control-Max-Age:本次许可的有效时长，单位是秒，**
+
+开发中都设置
+Access-Control-Allow-Origin: http://manage.leyou.com
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Methods: GET, POST, PUT
+Access-Control-Allow-Headers: X-Custom-Header
+Access-Control-Max-Age: 1728000

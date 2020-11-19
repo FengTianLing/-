@@ -1,0 +1,312 @@
+javascript 模块化编程
+
+
+#往期前端模块开发演变
+-------------------------------------------------------
+1全局函数所带来的问题
+    1.1命名冲突
+    1.2.可读性差(相同的功能方法不能写在一块,分散)
+    1.3.相同功能的函数没法完整的写在一起
+
+
+2.命名空间:就是把自己所有的方法封装到一个对象里面,我写我的对象,你写你的对象
+    2.1可以解决命名冲突问题,但不完美,也有可能冲突
+    2.2驼峰命名.没办法私有性
+
+3.划分私有空间:属性私有,对外暴露return
+    3.1还是会带来由命名冲突问题,还是需要约定
+
+4.扩展和维护模块
+    4.1开闭原则,对直接修改关闭,扩展开放
+
+5.第三放依赖
+    5.1很牵强的解决文件依赖问题
+
+-------------------------------------------------------
+
+
+SeaJs工具
+1.CMD规范
+     
+2.使用SeaJS构建模块化开发
+
+
+小知识点
+驼峰命名
+匈牙利命名:符合驼峰,但是命名前面会加上类型
+--------------------------------------------------------
+1.JavaScript不仅仅可以运行在浏览器上,也可以运行在Nodejs上
+2.给JS引擎套上一个壳子,写JS代码传给JS引擎,操作硬件。就是nodeJs
+3.Node.js  是基于 v8引擎来解析JS代码的,就不用考虑兼容性问题;在V8引擎之上构建一个运行时环境,就是NodeJS
+4.NodeJS可以解析和执行JS代码,让我们的JS代码可以在Nodejs上面跑
+5.特点:事件驱动,无阻塞的IO模型;轻量,高效
+6.Node是一门技术,不是一门语言
+
+
+----------------------------------------------
+Nodejs内置对象
+globel:NodeJs里面的全局对象,相当于window
+console.assert(判断表达式,str):断言
+console.time('test'):成对出现,用于记录时间,参数要一致
+console.timeEnd('test'):成对出现,用于记录时间,参数要一致
+require();引入其他js模块;
+process:repl一样,用来与Nodejs交互
+
+
+require:
+1.参数可以不包含扩展名,node会按照JS,node,json的顺序补足扩展名,依次尝试
+2.直接写包名:先在当前包内node_modules下找,再去父级目录下的node_modules找,依次向上,直到根目录
+
+module
+1.里面保存了模块的信息路径,父子信息,暴露出的对象信息
+
+exports
+module.exports 别名
+1.exports指针指向了module.exports
+2.如果直接= 会改变它的指针.经常是用.来绑定属性
+
+
+
+包目录规范
+index.js:入口文件
+package.json :包的说明文件
+Bin:存放二进制
+Lib:存放javaScript的目录
+DOC:存放文档的目录
+Test:存放测试单元的目录
+
+package.json的结构
+name:包的名称
+description:包的简介
+version:包的版本
+keywords:关键词数组,用于在npm中分类搜索
+author:包的作者
+main:配置包的入口文件,默认是模块根目录的index.js
+dependencies:包的依赖项,npm会通过该属性自动加载包依赖
+< > >= <= ~ X ^ *
+scripts:指定了运行脚本的npmm命令
+
+
+
+
+nvm:
+1.node版本的管理工具
+2.一台电脑装了多个版本的nodejs,用此命令切换版本
+
+
+npm:
+1.基于Node.js开发的包的托管网站
+2.Node.js的包管理工具
+3.基于包的规范的实现的一个包管理工具
+
+npm命令行
+
+npm install 包名   例如 npm install jquery
+1.当执行此命令,它会自动到npm网站,然后找到这个包的git地址,找到之后,下载这个压缩包
+2.然后在执行npm install的当前目录下,找到一个node_modules的目录,如果找到,直接解压这个压缩包到node_modules目录下
+3.如果找不到,则创建node_modules目录,解压到该目录下
+
+npm install -g 包名   例如 npm install -g jquery
+1.全局安装,不是安装在当前的node_modules下、
+2.npm安装时候,已经设置了一个安装目录,那个目录就是全局目录
+3.只要是全局安装就i是安装命令行工具
+
+
+npm install
+1.当执行此命令,会在当前目录查找package.json文件
+2.如果找到,在去里面找dependencies字段,安装里面的所有依赖项目
+3.如果是其他不是npm本身本来,会在package.json 查找scripts节点,看有没这个属性 看这个属性的命令
+
+
+npm init 
+--初始化模块,创建package.json文件
+
+npm i -S jquery -D  jquery  
+--创建package.json文件平且完善依赖描述 -D 是测试依赖
+
+npm docs 包名  例如 npm docs jquery   
+--查看包的文档
+
+npm uninstall 包名  
+--卸载当前目录下的某个包
+
+npm update 包名  
+--卸载当前目录下的某个包
+
+
+----------------
+
+
+nrm:
+1.npm的数据源管理工具
+2.控制npm去哪个服务器下载包
+
+cnpm:国内的淘宝服务器
+
+
+nodejs的同步和异步
+1.在nodejs里面,先执行同步代码,在执行异步代码
+2.同步会阻塞后面的代码
+
+异步非IO:setTimeout setInterval  就是没有IO操作的
+异步IO:操作文件,网络操作 fs
+
+
+
+nodejs执行过程
+1.执行node的代码,把代码放入队列
+2.事件循环程序(主线程)把队列里面的同步代码都先执行
+3.同步代码执行完成,执行异步代码
+4.异步代码分2钟清空
+    1.异步非IO 定时器这种代码,判断是否可以执行,如果可以执行就执行,不执行就跳过
+    2.异步IO文件操作,会从线程池拉出一个线程,帮助主线程去执行。
+5.主线程一直轮询,队列没有代码了,主线程就会退出。
+
+
+
+
+
+路径问题
+1.全部采用相对路径
+2.如果写/开头 会从文件所在盘符开始 
+
+
+
+异常处理
+nodejs调试
+1.node debug xxx.js  ; n 下一步 ;s 进入方法内部;o 退出方法
+2. npm install -g node-inspector  这种类似与浏览器的 F12
+    1 F8 恢复执行脚本
+    2 经过一个函数 F10
+    3 进入下一个函数 F10
+    4 进入函数内部 shift+F11
+    5 播放按钮 是跳到下一个断点
+    6 弧度箭头 是下一步
+    7 下箭头点 进入方法内部
+    8 上箭头点 跳出方法
+3.webStom 菜单-run-debug 和java类似
+
+
+
+
+API
+require('fs');
+readFile('路径','编码集',function(erro,data){}):读取文件
+access('路径',function(erro){}):判断文件是否存在
+writeFile('路径','内容','编码集',callback);:写文件,多次执行会覆盖内容,如果文件不存在创建,但是文件夹不会创建
+appendFile():追加文件内容
+mkdir():创建文件夹
+readdir():读文件夹
+stat('路径',function(err,stats){}):  下面是stats的方法
+--isFile:判断是否是文件
+--isDirectory:判断是否是一个目录
+--isBlockDevice:是否是一个块设备文件
+--isCharacterDevice:是否是一个字符设备文件
+--isSymbolicLink:是否是一个符号连接文件
+--isFIFO:FIFO
+--isSocket:是否是一个Socket文件
+
+
+path模块对象
+join(str..):路径拼接,解决.的问题
+basename('path'[,后缀]);取路径文件名,第二个参数如果传递,取没有后缀文件名
+extname('path');后缀名
+
+
+ES6语法
+
+严格模式:
+1.js第一行声明:'use strict'
+
+let变量
+1. let修饰的变量,只作用于自己的当前作用域内{}
+2. 外面访问不到子作用域被let修饰的变量
+3. 块级作用域
+4. 有点类似于方法的局部变量
+
+const常量
+1.被const修饰的变量属于一个常量
+2.require导入的对象,一般用const变量接收
+3.无法修改变量的值
+
+字符串操作
+includes():等同于java的indexOf()
+startsWith('str');判断字符串是不是以str开头
+endWith('str');判断字符串是不是以str结尾
+repeat(n);循环拼接本生
+
+``:字符串模板
+    1.可以用来做字符串拼接 例如: `我爱你${name},呵呵`
+
+promise:
+1.异步流程控制的解决方案
+2.是一种编程思路,想象一下then()
+3.回调函数嵌套太多,就用这种解决方案
+4.固定编程写法 
+return new promise(function(resolve,reject){
+    ....
+    if(err){
+        reject()//错误回调
+    }else{
+        resolve()//成功回调
+    }    
+})
+
+buffer对象
+1.一个数组,里面存储的是16进制 数字
+2.nodejs读取文件在程序中存在的形似
+
+
+网络编程
+
+###
+node没有web容器,它不需要服务器容器#重点
+1.如果JS写一个web应用,那么node就是web服务器
+2..net平台的ASP或者ASP.net,需要IIS作为服务器容器
+3.php需搭载Apache或者Nginx作为服务器容器
+4.JAVA的JSP需要tomcat作为服务器容器
+
+
+###
+为什么叫node
+1.node是一个面向网络而生的平台
+2.作者在创建Node项目的时候给它起了另外一个名字--web.js,就是一个web服务器。类似于tomcat,iis..
+3.web.js的发展超出了最初的想法,编程了构建网络应用的基础平台.然后就可以在这个基础平台上构建很多东西,比如服务器,客户端,各种命令行工具等。
+4.node的目标就是成为一个构建快速,可伸缩的网络应用平台。
+5.每一个node进程构建成网络应用中的一个节点,这就是node
+
+
+###
+HTTP协议
+1.有请求,有响应
+
+
+
+###
+网站优化
+1.js能压缩压缩,能合并合并
+2.少用Js去遍历对象或者for循环
+3.能提前运算好的提前运算好
+4.静态图片延迟加载
+
+
+###node模块
+http模块
+1.底层核心模块
+2.往后的框架都是以它进行封装
+API
+write(object);写出响应体
+writeHead(200,{key:value});写消息头，要写在代码第一行
+end();响应,要写在代码的最后
+request.httpVersion 读取http版本 
+request.method  读取请求方式
+request.url 读取请求url
+
+####
+url模块
+1.解析url
+2.读取url中的参数
+
+###
+querystring模块
+1.读取post请求参数    

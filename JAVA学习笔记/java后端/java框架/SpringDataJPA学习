@@ -1,0 +1,37 @@
+Spring data JPA(以下简称JPA)
+(1) Spring基于ORM对象关系映射,JPA规范的一套持久层框架
+(2) 用简短的代码实现对数据库进行CRUD操作
+(3) 易于扩展,大大提高了开发的效率
+
+常用类介绍:
+Repository:所有Repository类的父级接口,用来统一类型。
+
+CrudRepository 接口: 封装CRUD的功能
+
+PagingAndSortingRepository 接口: CrudRepository的子接口,增加了分页排序的功能
+
+JPARepository 接口: PagingAndSortingRepository的子接口,增加了批量等操作。
+1.delete:删除和批量删除
+2.findAll查询所有
+3.findOne查询单个
+4.save保存单个和批量保存
+5.saveAndFlush保存并刷新到数据库
+
+
+(1)JPARepository包含了CRUD,分页,批量等所有接口方法
+
+JPASpecificationExecutor 接口: 用来做复杂查询的接口,自己一个接口,没有继承关系
+
+环境的搭建
+1.导入jar包
+Spring 基础Jar包(4.1.5)
+Spring Data JPA(1.7.2)
+Spring Data Commons(1.9.2)
+Hibernate 相关(4.2.0)
+MySQL驱动包(5.1.6)
+日志相关jar包
+其他jar
+
+
+开发步骤
+1.实体类Dao层要继承JPARepository接口,并指定【实体类和ID类型】为泛型

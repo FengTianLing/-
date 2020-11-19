@@ -1,0 +1,165 @@
+Lucent:全问检索引擎工具包(就是一堆jar包)
+1.用来构建全文检索引擎系统,但是它不能独立运行
+2.对外提供全文检索服务	
+3.对与全文检索,lucene是底层的了
+4.简单说就是用它来让我们自己搭建搜索引擎
+
+全文检索：
+1.一种算法,也教倒排索引算法
+2.将文件中的内容提取出来,将文字拆分成一个一个的分词
+将这些分词组成索引,搜索的时候先搜索索引,然后通过索引
+找文档,这个过程叫做全文检索
+3.分词:去掉停用词,因为搜索的时候这些词没有意义;去掉重复词
+4.原理:相当于目录和正文两部分,和字典差不多
+
+Nutch:重量级的大规模爬虫工具,能够抓取和分辨web网站数据
+
+Lucence的结构
+1.索引和正本
+2.一个doucument对象代表数据库中的一条记录
+3.一个域代表数据库中的一列一行,可以用多个域
+4.索引存的是分词,指向这些域
+
+1.开发中,写入的分词器和搜索的分词器要对应
+
+域的详细介绍
+1.是否分词:分词的作用是为了索引
+2.是否索引:索引的目的是为了搜索
+3.是否存储:
+
+
+分词器
+1.第三方中文分析器 IK-analyzer
+
+lucene和solr的区别:Solr是Lucene面向企业搜索应用的扩展
+1.Lucene本质是搜索库,不是独立的应用程序,而solr是
+2.lucene是专注与搜索底层的建设,而solr专注于企业应用
+3.Lucene不负责支撑搜索服务的必须管理,而solr负责
+
+
+
+solr:全文检索引擎系统,部署再tomcat下就可以独立运行,通过http协议
+对外提供全文检索服务,就是对索引和文档的增删改查服务
+1.底层用的是lucene实现,对lucene进一步做了封装和扩展
+2.提供了比lucene更丰富的查询语言,并对查询进行了优化
+3.一款已经做好的全文检索引擎系统,直接拿来用就好了
+4.提供了java访问的solr服务器的接口solrj
+4.域一定要先定义,后使用,还必须有iD主键域
+
+搭建solr服务器
+1.下载solr4.10.3并解压
+2.把找到解压后dist目录下的war包,复制到tomcat的工程上
+3.启动tomcat容器解压war,然后关闭
+4.找到解压后example\lib\ext目下的所有jar包,拷贝到tomcat的solr工程下
+5.除tomcat目录外的任意地方建立一个文件夹,名称:solrhome
+6.修改solr工程下的web.xml文件,打开env-entry标签,修改solrhome的路径保存
+
+添加中文分词器
+1.把中文分词器jar包拷贝到tomcat的solr工程的lib下
+2.把中文分词器的3个配置文件拷贝到solr工程的classes目录下
+3.找到solrhome下的schema.xml,再最后面添加
+<!-- IKAnalyzer-->
+	<fieldType name="text_ik" class="solr.TextField">
+		<analyzer class="org.wltea.analyzer.lucene.IKAnalyzer"/>
+	</fieldType>
+4.定义域
+<!--IKAnalyzer Field-->
+<field name="title_ik" type="text_ik" indexed="true" stored="true" />
+<field name="content_ik" type="text_ik" indexed="true" stored="false" multiValued="true"/>
+5.完成
+
+
+使用插件导入数据库中的数据建立索引
+1.找到解压后dist目录下的两带import字样的jar包,复制到solrhome的某个实例下
+2.把数据库的驱动包也放在solrhome的某个实例下(建立一个lib文件夹单独存放jar包)
+3.修改solrconfig.mxl,添加一个请求
+<requestHandler name="/dataimport" 
+		class="org.apache.solr.handler.dataimport.DataImportHandler">
+<lst name="defaults">
+ <str name="config">data-config.xml</str>
+</lst>
+</requestHandler> 
+4.创建data-config.xml
+5.定义好域
+
+
+API:
+SolrServer:用来与solr服务器进行连接的类,索引库
+
+SolrDocument:一个这样的对象表示数据库中的一行数据
+
+Field:域,相当于列字段,是否分词,索引,存储。要先定义才能使用
+
+
+solrCloud:分布式搜索方案,当需要大规模,容错,分布式索引和检索能力时使用
+1.基于Solr和zookeeper的分布式搜索方案
+2.只要思想是使用zookeeper作为集群的配置信息的中心
+3.功能集中式配置,自动容错,负载均衡,近实时搜索
+
+solr集群架构
+1.包含两部分:一部分是zookeeper集群,一部分是solr集群
+2.zookeeper就是solr集群的入口,管理工具,要实现高可用
+
+solr集群搭建
+1.zookeeper集群参考dubbo复习内容
+2.复制4份tomcat.修改每个tomcat的端口号
+conf/server.xml 搜索port 修改 3个端口号
+3.把单机版的solr分别复制到这些tomcat的工程目录下
+4.solrhome也要拷贝4份,修改每个home里面的solr.xml文件
+	(1)修改solrcloud标签的host和port,对应好tomcat的地址和端口
+	(2)每个solr工程的web.xml都对应好自己的home
+5.修改每个tomcat里面bin目录下的catalina.sh(建立solr和zookeeper的关联)
+添加 JAVA_OPTS="-DzkHost=192.168.25.xxx:2181,192.168.25.xxx:2182,..." 
+(zookeeper的地址和端口)
+6.上传配置文件到zookeeper,让它来管理集群配置文件.
+	(1)使用solr原解压包中的zkcli.sh工具来上传(如下命令)
+	(2)./zkcli.sh -zkhost 192.168.25.154:2181,192.168.25.154:2182,192.168.25.154:2183 
+	-cmd upconfig -confdir /usr/local/solr-cloud/solrhome01/collection1/conf/ -confname myconf
+7.配置完毕就可以连接zookeeper了，连接zookeeper的命令：
+./zkCli.sh -server 192.168.25.154:2182
+8.完成,把所有的tomcat全部启动
+
+
+补充:(浏览器执行)
+SolrCloud创建collection和分片
+http://192.168.25.154:8180/solr/admin/collections?action=CREATE&name=collection2&numShards=2&replicationFactor=2
+
+SolrCloud删除Collection的命令
+http://192.168.25.154:8180/solr/admin/collections?action=DELETE&name=collection1
+
+API
+
+HttpSolrServer:连接单机版solr服务器的类
+CloudSolrServer:连接集群版solr服务器的类
+1.可以理解成这两个类是一个list
+
+2.void add(SolrInputDocument doc):向连接实例添加文档对象
+
+3.void commit():写出文档
+
+4.QueryResponse query(SolrQuery q):按条件查询索引库:返回QueryResponse数据对象
+1.map getHighlighting()：取得高亮
+
+SolrInputDocument :文档对象
+1.addField("域名",object o):向文档中添加域和数据
+
+QueryResponse：索引库返回数据对象
+1.SolrDocumentList getResults():取得结果集对象
+
+SolrDocumentList:结果集List对象,一个List
+1.long getNumFound()：返回查询的总记录熟
+
+SolrDocument:结果文档对象
+1. get("域名")：取得文档对象里的域值
+
+SolrQuery：条件对象
+1.set("",""):通用条件方法
+2.setQuery(String str):
+3.这里方法很多,建立打开solr页面看
+
+
+
+
+
+
+

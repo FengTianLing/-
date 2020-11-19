@@ -1,0 +1,103 @@
+Nginx:一款高性能的Http服务器/反向代理服务器。
+1.官方测试能支撑5W的并发量
+2.对系统性能消耗非常低
+3.可以独立提供http服务,可以用作网页静态服务器
+4.还可以配置虚拟主机：可以实现一台服务器虚拟多个网站。
+5.反向代理/负载均衡。
+
+反向代理/负载均衡：当一台服务器不能满足用户请求时,
+使用多台服务器做集群时可以使用nginx的反响代理。并且
+多台服务器可以平均分担负责,不会因为某台服务器负载过高
+宕机和某台服务器闲置的情况
+
+
+高可用:nginx作为负载均衡器,所有的请求都到了nginx
+为了避免nginx负载均衡服务器宕机,就要建立起来备份机器。
+主机和备份机都运行高可用监控程序,通过心跳检测机制来告诉
+主机的运行状况.当备份机器再一定的时间内不能接收到主机的信息
+备份集启动。使用到keepalived来监控
+
+高并发解决:如果nginx使用已经达到了5万的并发,那么说明你的项目已经
+达到一定规模，不差钱了。再nginx前面可以使用硬负载了。硬件负载均衡
+全世界只有两家能做硬负载。如果觉得贵,那就使用lvs Linux虚拟服务器
+同样是4层负载
+
+虚拟主机的区分
+1.按端口区分,修改listen
+2.按域名区分,修改server_name
+
+
+正向代理(服务器):说的是客户端
+比如我要访问国外的某个网站,但这个网站不允许直接访问的,需要通过国外
+另外一台服务器,这台代理服务器可以直接访问。我们通过访问这台代理服务器
+发送请求,代理服务器转发到我们要访问的目的网站,网站给代理服务器响应,代理
+服务器再发响应转发回来。这样就能访问到了。
+
+
+
+反向代理(服务器):说的是服务端
+一个网站可能有很多台服务器,但网站的入口只有一个。用户不需要考虑哪太服务器
+提供服务器,而是通过访问反向代理服务器,由反向代理服务器转发给网站的多台应用
+服务器(其中一台),然后响应给反向代理服务器,然后反向代理服务器再响应给用户
+
+
+
+
+nginx的配置文件
+1.nginx.conf
+2.我们要修改的是http里面的节点
+3.一个server{}:等于一个虚拟机
+4.listen :端口
+5.server_name:域名/ip
+6.location:解释,请求来了我到哪个地方找映射的资源
+7.root:根目录 默认相对路径是软件的根目录开始。静态资源用这个属性
+8.index:这个属性是代表欢迎页面
+9.error_page  错误代码  错误页面  --这个格式
+反向代理的配置
+10.proxy_pass:把root属性替换掉。请求转发代理。后面写网站地址 http://tomcat1
+11.添加多一个upstream节点名称对应proxy_pass属性值
+upstream tomcat1{
+    server 192.168.x.x:prot;
+}
+12：weight=1:权重
+
+
+Nginx的安装
+1.安装gcc的环境 yum install gcc-c++
+2.安装第三方的开发包
+yum install -y pcre pcre-devel
+yum install -y zlib zlib-devel
+yum install -y openssl openssl-devel
+3.解压源码安装包
+tar zxf nginx-1.12.0.tar.gz
+4.创建makefle
+./configure \
+--prefix=/usr/local/nginx \
+--pid-path=/usr/local/nginx/logs/nginx.pid \
+--lock-path=/var/lock/nginx.lock \
+--error-log-path=/usr/local/nginx/logs/error.log \
+--http-log-path=/usr/local/nginx/logs/access.log \
+--with-http_gzip_static_module \
+--with-http_ssl_module \
+--http-client-body-temp-path=/var/temp/nginx/client \
+--http-proxy-temp-path=/var/temp/nginx/proxy \
+--http-fastcgi-temp-path=/var/temp/nginx/fastcgi \
+--http-uwsgi-temp-path=/var/temp/nginx/uwsgi \
+--http-scgi-temp-path=/var/temp/nginx/scgi
+
+
+注意：上边将临时文件目录指定为/var/temp/nginx，需要在/var下创建temp及nginx目录
+
+
+5.开始编译 make
+6.安装 make install
+---------------其他命令
+7.可能会提示缺少目录，要创建/var/temp/nginx 目录 mkdir xx -p
+8.关闭nginx 命令:kill 端口ID
+或者./nginx -s stop
+9.重新刷新./nginx -s reload
+
+
+参考安装,不要覆盖了https://blog.csdn.net/weixin_38111957/article/details/81283121
+这段脚本如果需要安装nginx插件，添加到配置最后面configure
+--add-module=/root/soft/fastdfs-nginx-module/src

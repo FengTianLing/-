@@ -1,0 +1,77 @@
+什么是Bom:
+1.浏览器对象模型
+2.window顶级对象
+3.DOM也是BOM的一部分
+4.自定义的成员变量,也会成为window的一个属性;函数也一样 window.name
+5.通常情况下,window可以忽略不写
+
+
+history:历史记录
+location:地址栏
+
+
+
+API
+window.open(url,target[,param]):网页跳转
+url要打开的链接,target打开方式;param新窗口设置
+
+param可以设置的值,json格式;有兼容性问题
+name:新窗口的名称,可以为空
+featurse:属性控制字符串,在此控制窗口的各种属性.属性之间逗号隔开。
+fullscreen={yes/no/1/0} 是否全屏 默认 no
+channelmode={yes/no/1/0} 是否显示频道栏 默认 no
+toolbar={yes/no/1/0} 是否显示工具条 默认 no
+location={yes/no/1/0} 是否显示地址栏 默认 no
+directories={yes/no/1/0} 是否显示转向按钮 默认 no
+status={yes/no/1/0} 是否显示窗口状态条 默认 no
+menubar={yes/no/1/0} 是否显示菜单栏 默认 no
+scrollbars={yes/no/1/0} 是否显示滚动条 默认 yes
+resizable={yes/no/1/0} 是否窗口可调节大小 默认 no
+width=number 窗口的宽(像素单位)
+height=number 窗口的高(像素单位)
+top=number 窗口距离屏幕顶部距离(像素单位)
+left=number 窗口距离屏幕左边距离(像素单位)
+
+
+新窗口.moveTo(5,5):窗口的位置
+新窗口.moveBy()
+新窗口.resizeTo():窗口的大小
+新窗口.resizeBy()
+
+
+window.close():关闭窗口
+
+location对象
+1.相当于浏览器的地址栏,把地址栏看成一个对象
+2.可以将url解析成独立的片段
+属性
+href  :地址跳转
+hash:返回url中#后面的内容 ,包括#
+host:主机名,包括端口
+hostname:主机名
+pathname:url中的路径部分
+protocol:协议名 http或https
+search:查询字符串 
+方法
+assign():改变浏览器地址,并记录到历史中
+replace():替换浏览器地址,不会记录到历史中
+reload():重新加载,就是刷新
+
+navigator对象:获取客户端的一些信息，如果用户在什么系统环境下用浏览器
+属性
+userAgent 系统,浏览器信息
+platform  浏览器所在的系统
+
+history对象:历史记录管理
+方法
+history.back():回退
+history.go(-1):0是刷新
+history.forward():前进
+history.go(1):
+
+
+获取屏幕的分辨率
+window.screen.width
+
+
+

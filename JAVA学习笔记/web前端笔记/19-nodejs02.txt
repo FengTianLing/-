@@ -1,0 +1,352 @@
+###
+什么是nodejs
+1.首先是一门技术,不是一门语言
+2.让javaScript运行在服务器的开发平台
+3.基于V8引擎之上构建运行时环境(js执行环境),就是nodejs
+4.不需要web容器运行(Apache,Tomcati等)
+5.可以直接运行js文件。浏览器都不行,需要配合html标签才行
+
+###
+特点:
+1.单线程
+2.事件驱动
+3.无阻塞IO模型
+4.轻量,高效。
+
+###
+nodejs的执行过程
+1.执行node代码,把代码放入队列
+2.事件循环程序(主线程)先把队列里面的同步代码都先执行掉
+3.同步代码执行完,在去执行异步代码
+4.异步代码分两种去执行
+    (1)异步非IO 定时器,判断是否可以执行,不执行就跳过
+    (2)异步IO文件操作,会从主线程拉出一条线程,去执行IO操作,执行完了又把可以执行的回调放入主线程中的队列
+5.主线程一直轮询,队列没有代码了,主线程就会退出。
+
+注意:
+1.了解什么是事件环
+2.怎么把异步变成同步的
+
+###
+nodejs适合开发什么业务
+1.善于IO,不善于计算。最擅长任务调度。
+也非常适合web soket长连接实时交互
+2.用户表单收集
+3.考试系统
+4.聊天室
+5.图文直播
+6.提供JSON的API
+
+不适合什么业务
+1.银行,证券这种极高可靠性的业务中
+2.追求稳定性的业务
+3.无法和JAVA,PHP这种老牌抗衡
+
+
+###
+nodejs的安装
+1.建议装压缩版,配置环境变量
+2.配置完成后,就可以使用npm命令和node命令
+
+###
+npm是什么
+1.基于nodejs开发的 包的托管网站(社区)。
+2.基于包的规范的实现的一个包管理工具
+3.npm和maven差不多,一个下载js的包,一个下载jar包
+4.借助package.json管理依赖
+
+
+命令
+npm init 
+--初始化模块,创建package.json文件
+npm install -S jquery -D  jquery  
+--创建package.json文件平且完善依赖描述 -D 是测试依赖
+npm docs 包名  例如 npm docs jquery   
+--查看包的文档
+npm uninstall 包名  
+--卸载当前目录下的某个包
+npm update 包名  
+--卸载当前目录下的某个包
+
+
+###
+mvm是什么
+1.node版本的管理工具
+2.一台电脑可以装多个版本的nodejs,用mvm切换版本
+
+###
+nrm是什么
+1.npm的数据源管理工具
+2.控制npm去哪个服务器下载包
+3.类似于maven是仓库控制,去哪个仓库下载
+
+###
+cnpm
+1.和npm一样,不够是国内淘宝的
+1.国内的淘宝服务器
+
+###
+nodejs项目
+1.项目源码被修改,需要重启项目刷新。
+2.项目不需要依赖任何web容器,项目放在哪都可以启动
+3.所有url进来都读取静态文件,然后响应;html,图片,音频
+
+
+###
+路径问题
+1.模块与模块之间require(),路径是从模块自身出发 
+2.fs模块读取文件:相对路径:是相对于npm命令的当前路径;就是相对于命令提示符显示的路径
+  比如:JS文件里面有路径./0.jpg 我运行命令当前路径是c:/ 那么完整路径是c:/0.jpg
+2./开头书写路径,会从文件当前根盘符开始,如果是win系统 d:/就是根
+
+__dirname:内置属性 相对于当前js模块路径名
+__filename:内置属性 当前JS文件模块的绝对路径
+
+
+
+
+###
+nodejs内置对象
+1.globel对象:相当于window
+2.console.assert(判断表达式,str):断言
+3.console.time('test'):成对出现,用于记录时间,参数要一致
+  console.timeEnd('test'):成对出现,用于记录时间,参数要一致
+4.require();引入其他js模块;
+    (1)参数可以不包含扩展名,node会按照JS,node,json的顺序补足扩展名,依次尝试
+    (2)直接写包名:先在当前包内node_modules下找,再去父级目录下的node_modules找,依次向上,直到根目录,在找环境变量的路径
+    (3)require()被引入的模块会被顺序执行
+5.process:repl一样,用来与Nodejs交互
+6.module对象:里面保存了模块的信息路径,父子信息,暴露出的对象信息
+7.exports:module.exports 别名;exports指针指向了module.exports,如果直接= 会改变它的指针.经常是用.来绑定属性
+8.buffer对象
+    (1)一个数组,里面存储的是16进制 数字
+    (2)nodejs读取文件在程序中存在的形似
+
+9.promise对象:
+    (1)异步流程控制的解决方案
+    (2)是一种编程思路,想象一下then()
+    (3)回调函数嵌套太多,就用这种解决方案
+    return new promise(function(resolve,reject){
+        ....
+        if(err){
+            reject()//错误回调
+        }else{
+            resolve()//成功回调
+        }    
+    })
+
+
+
+
+###
+什么是模块
+1.每一个javaScript文件都是一个模块
+2.模块与模块之间可以通过require来导入
+3.一个javaScript文件中定义的变量,只在这个文件中有效
+4.模块提供一个对外全局暴露的属性 module.exports
+
+
+###
+什么是包package
+1.每个模块都可以打包
+2.模块打包成包都有一套固定的结构(有描述文件package.json)
+3.模块打包被别人下载,都会存放在node_modules目录下
+4.模块名一般与包名对应
+
+
+1.包的目录结构
+    index.js:入口文件
+    package.json :包的说明文件
+    Bin:存放二进制
+    Lib:存放javaScript的目录
+    DOC:存放文档的目录
+    Test:存放测试单元的目录
+2.package.json的结构
+    name:包的名称
+    description:包的简介
+    version:包的版本
+    keywords:关键词数组,用于在npm中分类搜索
+    author:包的作者
+    main:配置包的入口文件,默认是模块根目录的index.js
+    dependencies:包的依赖项,npm会通过该属性自动加载包依赖
+    < > >= <= ~ X ^ *
+    scripts:指定了运行脚本的npmm命令
+
+
+
+
+
+
+###
+nodejs内置模块
+
+1.HTTP模块:node底层核心模块
+    Server对象:通过http.createServer()创建;用来监听请求,端口
+    Requset对象:请求对象,接收用户请求;也是一个输入流
+    Response对象:响应对象,响应用户
+
+API
+Requset.url;请求url路径属性;忽略锚点
+Requset.method;请求方式属性
+Requset.httpVersion 请求http的版本 1.0/1.1
+Response.writeHead(statusCode[,{}]);响应头
+Response.write(str);响应体
+Response.end([str]);响应结束一定要调用,后面不允许还有代码
+Response.redirect("");重定向
+
+2.URL模块:用来解析url请求路径
+API
+Object url.parse(strUrl[,boolean]);解析url请求
+str url.format(Obj);把对象转成url参数
+str urlObj.pathname; 解析后的url请求路径;没有参数
+Object urlObj.query;解析后的请求参数对象;看parse的第二个参数决定是字符串还是对象
+
+
+3.querystring模块:解析post的请求参数
+Object querystring.parse(strData);用来解析foo=123&aoo=456&coo=789 格式的请求参数
+
+4.path模块
+API
+path.join(str..);路径拼接,解决.的问题
+path.normalize('path');把错误路径正常化
+path.extname('path');取文件后缀名
+path.basename('path'[,后缀]);取路径文件名,第二个参数如果传递,取没有后缀文件名
+
+
+5.File System-fs模块:用来操作本地文件
+    (1)几乎所有的方法都是异步的
+    (2)路径问题,读取文件路径相对路径 ./开头
+    (3)该模块的方法和linux系统命令基本一致
+API
+fs.mkdir();创建文件夹
+fs.read();二进制文件读取
+fs.readSync();同步二进制文件读取
+fs.readFile();文件内容读取(读取到的是一个buffer对象)
+fs.readStream();流方式读取
+fs.writeFile('路径','内容','编码集',callback);:写文件,多次执行会覆盖内容,如果文件不存在创建,但是文件夹不会创建
+fs.appendFile();追加文件内容
+fs.mkdir();创建文件夹
+fs.readdir();读文件夹
+access('路径',function(erro){}):判断文件是否存在
+fs.statSync('./path'(err,stats)=>{});同步读取文件信息(大小)
+    --stats.isFile:判断是否是文件
+    --stats.isDirectory:判断是否是一个目录
+    --stats.isBlockDevice:是否是一个块设备文件
+    --stats.isCharacterDevice:是否是一个字符设备文件
+    --stats.isSymbolicLink:是否是一个符号连接文件
+    --stats.isFIFO:FIFO
+    --stats.isSocket:是否是一个Socket文件
+ReadStream fs.createReadStream();创建输入流
+WriteStream fs.createWriteStream();创建输出流
+rs.pipe(ws);用来联通两个流
+ws.end();关闭流输出流
+
+
+
+###
+express框架
+1.对原生Nodejs进行了大量的封装工作
+2.类似于与Jquery和JS的关系
+3. 4.x版本和3.x版本差异比较大
+4.浏览器url不区分大小写
+5.url路径匹配正则
+6./aaa/:param1  restfull风格写法 
+
+express路由中间件
+1.定义了两个同名的路由,上面的会被执行,下面的不会
+2.如果第一个调用了next()方法,会两个方法一起执行,最后由下面的响应
+3.主要用来重定向登录
+4.解决这种方法用use方法
+
+API
+express对象-路由功能方法
+all();接收get,post...请求
+get();接收get请求
+post();接收post请求
+use();也是接收请求的,也可以用来添加中间件
+
+
+Request对象
+req.params.xxx;获取请求参数
+
+Response对象
+res.end();响应,最后响应需要调用
+res.send();根据内容响应内容消息头
+render('模板',data);调用模板引擎,默认在views文件夹找
+
+###
+状态管理cookie,Session
+1.cookie-parser 插件封装了cookie的常用API
+2.使用  express.use(require('cookie-parser')());
+3.req用来读取cookie,res用来设置cookie
+3.express-session 插件封装了session的常用API
+
+
+###
+formidable:第三方框架
+1.用来处理文件上传
+
+
+###
+模板引擎:第三方框架
+1.ejs框架
+    (1).ejs文件作为html模板
+    (2)效率不是很高
+1.jade框架
+    (1)一个没有标签对<>的模板
+    (2)靠缩进来表示
+    (3)模板语法结构太复杂,是我绝对不玩,可读性不好
+    (4)效率高
+    (4)但是express框架却是用这个模板,操蛋
+
+
+
+###
+crypto 加密插件
+
+###
+graphicsMagick 图片处理
+1.是一款小软件
+2.安装系统上,可以使用命令来控制图片
+3.nodejs提供了对它的支持, gm 包
+
+###
+jcrop
+1.Jquery插件
+2.也是一款图片剪裁
+
+###
+mongoose 数据库操作
+1.mongodb的解决方案
+2.操作对象相当于操作表
+3.通过查询出来的实例，也可以进行save操作(持久态)
+
+Schema:对象定义字段类型
+var xxxSchema = new mongoose.Schema({});
+
+xxxSchema.statis.fnxxx  定义静态方法
+xxxSchema.methods.fnxxx 给对象自己添加方法,自己操作自己 比如修改属性,查询
+
+mongoose.model("xxx",xxxSchema) 得到一个类模型,用它来创建对象,或者静态方法操作数据了
+
+
+
+
+###
+nodejs调试
+1.node debug xxx.js  ; n 下一步 ;s 进入方法内部;o 退出方法
+2. npm install -g node-inspector  这种类似与浏览器的 F12
+    1 F8 恢复执行脚本
+    2 经过一个函数 F10
+    3 进入下一个函数 F10
+    4 进入函数内部 shift+F11
+    5 播放按钮 是跳到下一个断点
+    6 弧度箭头 是下一步
+    7 下箭头点 进入方法内部
+    8 上箭头点 跳出方法
+3.webStom 菜单-run-debug 和java类似
+
+
+
+
+    

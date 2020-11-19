@@ -1,0 +1,45 @@
+
+图片上传流程
+1.客户端先和Tracker Server进行连接
+2.Tracker Server返回你要存储文件放那台服务器的IP和端口(Stroger Server)
+3.客户端拿到IP和端口,直接上传到图片服务器(Stroger Server)上
+4.上传完后,Stroger Server会返回这个图片的URI给你
+
+开发步骤
+1.FastDFS提供了访问它的jar包,把它导入进来
+2.新建一个配置文件,里面有服务器的地址和端口
+3.加载配置文件
+4.创建TrackerClient对象:用它来进行连接,获得TracKer Server实例
+5.再声明一个storageServer类型的变量,null
+6.创建storageClient对象,需要storageServer和TracKer Server参数
+7.使用storageClient进行文件上传操作
+
+
+图片下载(了解流程)
+1.Stroger Server会定时向Tracker Server发送状态信息
+2.客户端与Tracker Server进行通讯,然后返回IP和端口,告诉你去那台服务器下载
+
+
+FastDFS
+1.:分布式文件系统
+2.实现处理高并发,高可用
+架构
+Storage群:用来存储图片的地方 
+	1.里面有分组成卷1，卷2..:一个卷就是一台或多台服务器
+	(都是文件同步,实现了备份,一台坏了有另外一台顶替),高可用。
+	一个组里面没有主从区分。同时可以横向扩展加卷(组)。组和组之间内容是不一样的
+	2.客户端【取】图片是和Storage群直接进行通讯
+
+Tracker群：管理集群。Storage群
+1.向导作用,引导客户端向哪台服务器(Storage群)【存】储数据。
+2.可以布多台Tracker服务器,没有主从,地位都是相等的
+2.要和Storage群实时通讯,检测是否还正常运行,或容量空间,或负载情况
+
+
+
+
+nginx:HTTP负载均衡服务器
+1.能解决高并发，高可用
+2.反向代理
+3.官方称能支持5并发连接
+通过nginx去访问图片服务器FastDFS

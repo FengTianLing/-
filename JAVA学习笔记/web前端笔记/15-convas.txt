@@ -1,0 +1,66 @@
+convas(画布):
+1.用于图形的绘制,通过脚本 (通常是JavaScript)来完成.
+2.<canvas> 标签只是图形容器，您必须使用脚本来绘制图形。
+3.你可以通过多种方法使用 canvas 绘制路径,盒、圆、字符以及添加图像。
+4.默认情况下 <canvas> 元素没有边框和内容。
+
+坐标
+1.canvas 是一个二维网格。
+2.canvas 的左上角坐标为 (0,0)
+
+
+strokeStyle：笔触颜色样式属性
+fillStyle:填充色属性
+lineCap:线帽(头)属性 3个可选值
+lineJoin:线交点样式 3个可选值
+font - 定义字体  //ctx.font="30px Arial";
+stroke():绘制路径
+fill():填充
+
+Canvas - 路径
+moveTo(x,y) 定义线条开始坐标
+lineTo(x,y) 定义线条结束坐标
+closePath():用来闭合路径
+beginPath()：开启新路径,保留旧路径
+fillText(text,x,y) - 在 canvas 上绘制实心的文本
+strokeText(text,x,y) - 在 canvas 上绘制空心的文本
+rect(x,y,w,h):绘制矩形路径
+strokeRect(x,y,w,h):绘制描边矩形
+fillRect(x,y,w,h):绘制填充矩形
+
+Canvas - 圆形
+arc(x,y,r,start,stop):画圆形 x,y是圆心坐标,r是半径;起始弧度,结束点弧度;一般会把弧度转化成角度
+
+Canvas - 文字
+strokeText(t,x,y,length):绘制描边文字 t:要绘制的文字,x,y坐标，length限制文字的最大长度
+fillText(t,x,y,length):绘制填充文字
+font:文字的属性,和css语法一样;单独设置字体不会生效,必须额外加另外一个字体属性
+textAlign:文字水平对齐方式；left | right | center
+textBaseLine:文字垂直对齐方式 top | bottom | middle
+
+
+clearRect:清除路径
+lineDashOffset:虚线偏移量属性
+setLineDash([s,x]):设置虚线
+
+
+Canvas - 渐变
+1.当我们使用渐变对象，必须使用两种或两种以上的停止颜色。
+2.addColorStop()方法指定颜色停止，参数使用坐标来描述，可以是0至1.  //grd.addColorStop(0,"red");
+createLinearGradient(x,y,x1,y1) - 创建线条渐变 //var grd=ctx.createLinearGradient(0,0,200,0);
+createRadialGradient(x,y,r,x1,y1,r1) - 创建一个径向/圆渐变 //var grd=ctx.createLinearGradient(0,0,200,0);
+
+
+Canvas - 图像
+drawImage(image,x,y[,w,h]) 把一幅图像放置到画布上;需要注意的是,画图像必须配合事件
+
+
+Canvas - 状态
+save():把当前的状态(绘制环境的所有属性)拷贝一份进行存储
+restore():状态回滚;把最近保存的一次状态进行回滚
+
+translate(x,y);平移坐标轴;已经绘制的图形不会受到影响
+rotate(旋转的弧度 );旋转标轴;已经绘制的图形不会受到影响
+scale(x缩放比值,y轴缩放比值 );缩放坐标轴;已经绘制的图形不会受到影响
+
+

@@ -1,0 +1,14 @@
+ String load=httpSession.getServletContext().getRealPath("img");
+        String finalLoad=load+ File.separator+"1.png";
+//        出入流
+        InputStream inputStream =new FileInputStream(finalLoad);
+        byte[] bytes=new byte[inputStream.available()];
+        inputStream.read(bytes);
+//        设置请求头
+        HttpHeaders httpHeaders=new HttpHeaders();
+        httpHeaders.add("Content-Disposition","attachment;filename=1.png");
+//        设置响应状态
+        HttpStatus statusCode=HttpStatus.OK;
+//        创建响应实体类
+        ResponseEntity<byte[]> responseEntity=new ResponseEntity<byte[]>(bytes,httpHeaders,statusCode);
+        return responseEntity;

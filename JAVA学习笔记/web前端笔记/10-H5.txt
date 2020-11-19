@@ -1,0 +1,307 @@
+HTML5:
+1.HTML4的升级版(狭隘),对结构/样式/js都有所增强
+2.对JSAPI也有所增强 地理定位,web存储,拖拽
+3.H5广义指 HTML+CSS3+JS
+3.IE8以下版本不支持H5
+
+解决IE8不支持H5的问题
+1.引入html5shiv.min.js文件
+2.条件注释
+语法 <!--[if lte ie 8]  ... <![endif]-->
+l:less 更小 t:than 比起 e:equal 等于 g:great 更大
+
+标签
+<header></header>:头部标签
+<nav></nav>:导航标签
+<section></section>:主体标签
+<aside></aside>:主体左边
+<article></article>:主体右边
+<footer></footer>:底部
+这些标签等同于DIV,但有语义
+
+表单标签
+1.H5的表单标签,带有自动验证功能
+2.还是input标签,但类型type有所增强
+3.url,number,mail,tel,seach,range,color,time,date week....
+4.约束属性 tep,max,min
+5.部分类型是为移动设备的,具有兼容性问题
+
+keygen 单标记;表单提交数据进行加密
+meter 标签;度量器
+progress 标签:进度条
+
+
+表单属性:
+placeholder:提示文字(占位符)
+autofocus:自动获取鼠标焦点
+autocomplete:自动保存表单输入,下次输入可选择。默认on 开启off
+required:表单必填项
+mutiple:上传多选
+novalidate="novalidate":关闭表单自动验证 作用在form标签上
+pattern:正则验证属性  pattern="1\d{10}"
+
+
+表单事件
+oninput:用户输入内容触发
+oninvalid:验证不通过触发 配合 this.setCustomValidity("") 改变自动验证提示
+
+
+多媒体:
+1.在以往,在网页上播放多媒体,必须依赖第三方插件
+2.mediaplay,快播,falsh插件
+<audio  loop autoplay controls></audio>:音频;有兼容性问题,兼容写法
+<video src=""></video>
+<source src=""/>:写在多媒体标签里面,用于兼容性写法
+
+
+
+DOM扩展API
+document.querySelector(".class");模拟Jquery的选择器获取元素的新方法,只会选择符合条件的第一个
+document.querySelectorAll(".class");模拟Jquery的选择器获取元素的新方法,匹配所有元素
+document.classList.add("classname");模拟JQuery的addClass
+document.classList.remove("classname");模拟JQuery的removeClass
+document.classList.contains("classname");模拟JQuery的hasClass
+document.classList.toggle("classname");模拟JQuery的toggleClass,切换
+
+标签自定义属性:
+1.data-开头 如 data-name
+2.dataset['name'] 自定义属性的获取方式
+2.dataset['name']='sz' 自定义属性的设置方式
+3.data-my-name  这种出现两个-以上设置和获取方式需要使用驼峰命名 dataset['myName']
+
+
+CSS选择器补充
+div+p:选择器;选中div后面紧跟相邻着第一个p;不能出现间隔
+div~P:选择器;选中div后面所有的p
+
+    语法:
+    属性选择器:[]包含
+    一般写法:标签[属性="值"]{属性:值} 例: input[type="text"]{color:red}
+    正则写法:标签[属性[*$^]="值"][属性]{属性:值} 例: div[class^="aa"]{color:red} div[class$="aa"]{color:red}
+    两个属性:标签[属性="值"][属性]{属性:值} 例: input[type="text"][class]{color:red}
+
+    伪类选择器:参考css基础二-35行
+        1.几乎所有的标签都有伪类
+        2.伪类表示某一种状态;例如 :hover 鼠标悬停状态
+        3.标志符号 带有冒号[:]
+        结构伪类:通过结构来筛选,也就是节点的访问关系属性
+            li:first-child{属性:值};这里会先找父元素,选中第一个
+            li:last-child{属性:值};这里会先找父元素,选中最后一个
+            li:nth-child(10[odd|even|n(这里n表示大于1的'所有'自然正整数集)]){属性:值};选中任意;n可以进行计算,不能逻辑判断
+            li:nth-last-child(10){属性:值};这里会先找父元素,选中任意,从后往前选
+        empty伪类:div:empty{属性:值} 当标签中不包含"任何"内容时候被选中.空格也不行
+        target伪类:div:target{属性:值}  锚点伪类,需要配合锚点使用。当锚点被点击时,对应锚点会被激活
+
+
+    伪元素选择器:通过css3模拟标签效果
+        1.双冒号表示[::];在css2中有:after :befor也是伪元素,不推荐使用
+        2.在元素后面或前面插入一个伪元素;必须有content属性
+        3.谁的伪元素,就是谁的子标签
+        ::before伪元素:div::before{属性:值} 例子 div::befor{content:'...'} 在之前
+        ::after伪元素:div::after{属性:值} 例子 div::after{content:'...'} 在之后
+        ::first-letter伪元素:用伪元素把'第一个字母包'裹起来
+        ::first-line伪元素:用伪元素把'第一行字母包'裹起来
+        ::selection伪元素: 光标选中的区域被伪元素包裹 例子 p::selection{color:'red'}
+            p标签的内容被选中激活这个样式;通常只改变背景色和字体颜色,字体大小不生效
+        4.伪元素获取自定义属性值 attr(data-text);
+
+
+
+
+
+
+max-width:100px;  最大宽度
+min-width:100px;  最小宽度
+
+
+CSS样式
+
+    opctity透明度问题:
+    1.给父盒子设置opctity设置透明,子盒子也会变成透明
+    2.background:transparent; 可以单独给父盒子设置透明度,不能不给透明任意值
+    3.使用rgba赋值可以解决这个问题
+
+
+
+    边框样式
+    border-style:solid | dotted | dashed | none .(实线 点线 虚线 无)
+    border-color:red; 边框的颜色
+    border-width:1px; 边框的大小
+    border-collapse:collapse 边框的合并;表格用
+    8.1 边框圆形
+    border-top-left-radius:80px 120px; 单个属性设置左上  水平半径 垂直半径
+    border-top-right-radius:80px 120px; 单个属性设置右上  水平半径 垂直半径
+    border-bottom-left-radius:80px 120px; 单个属性设置左下  水平半径 垂直半径
+    border-bottom-right-radius:80px 120px; 单个属性设置右下  水平半径 垂直半径
+    border-radius:宽/高一半 | 50% | 0.3em | 左上角 右上角 右下角 左下角  边框半径 角度变圆角 例子 border-radius 60px / 120px;
+    8.2 边框图片;谷歌版本过高,有可能显示不出来
+    border-image-source:url(''); 边框图片来源
+    border-image-slice:27 27 27 27; 边框的裁剪,不用给单位
+    border-image-width:27px;图片边框的宽度
+    border-image-repeat:repeat| round | stretch;图片边框的屏幕
+
+
+
+    背景
+    background-size:宽(px,%) 高(px,%) | auto |cover (覆盖 整比例平铺) | contain (包含 最大化等比例放到最大); 控制背景大小
+    background-origin:boder-box | content-box | padding-box ;背景的原点,背景的原点位置默认是从padding盒子开始
+    background-clip:boder-box | content-box | padding-box; 背景裁剪;通常会配合背景原点来使用
+    background:url("") no-repeat left top,url("") no-repeat right top; 多背景语法,逗号隔开
+
+
+    阴影效果
+    text-shadow:3px 3px 3px red; 文字阴影
+    box-shadow:  3px 3px 3px 3px red;  盒子阴影
+    1.6个值的顺序:水平,垂直，模糊,阴影大小,颜色 , out外阴影 | inset 内阴影
+    2.可以写多个阴影,用逗号隔开
+
+    渐变色表示方式
+    渐变：渐变属于背景图片的属性
+    1.1线行渐变 linear-gradient(left,red,blue)
+        line-gradient(to left | to right | to top | 0deg (角度),开始颜色,结束颜色):线性渐变
+        line-gradient(0deg,开始颜色 [过度值百分比],结束颜色 [过度值百分比],颜色 [过度值百分比]...):线性渐变2 多种颜色
+    1.2斑马线思路,适应背景大小和平铺来控制
+    1.3径向渐变 radial-gradient(辐射半径(水平 垂直),中心点,开始颜色,结束颜色)
+        方向值:at开头
+
+
+    过度:transition:属性 毫秒值 [运动方式 延迟毫秒值],属性 值, linear(匀速)
+    例子 transition:width 2s ; 表示宽度发生改变的时候需要2秒的时间
+    transition:all 2s linear 1s;全部属性都是2s执行完,运动完事,1后开始执行
+    谁发生变动,就作用给盒子本身的样式
+
+    变换:transform:rotate(45deg);
+    transform:rotateX(45deg):X轴旋转  3D变换
+    transform:rotateY(45deg):X轴旋转  3D变换
+    transform:rotateZ(45deg):X轴旋转  3D变换
+    transform:translateX(300px);X轴移动 Z轴承必须配合透视才有效果
+    transform:scale(x,y);缩放比例
+    transform:skew(x,y);倾斜
+    transform-origin:x y;变换中心
+    语法:transform:translate(x,y) rotate(45deg)
+    清楚变换:transform:none
+
+    透视
+    perspective:500px;透视,让视觉呈现3D效果,非真正的3D
+    transform-style:preserve-3d;让子盒子保持3D透视
+    1.1值越小,透视效果越强
+    1.2透视属性作用在父盒子上
+
+    动画
+    1.CSS3中的动画,与js类似,先定义后调用
+    2.多组状态可以用百分比来定义动画阶段
+    2语法
+        @keyframes 动画名{
+            from{初始状态}
+            to{结束状态}
+        }
+    animation-play-state:paused;播放状态
+    animation-name:动画名; 调用哪个动画
+    animation-duration:3s; 完成动画所花费的时间
+    animation-iteration-count:3;执行次数
+    animation-direction:normal | alternate ;是否应该轮流反向播放动画
+    animation-timing-function:linear(线性) | ease-in (in加速 out减速) | steps(n) 分段执行; 
+    规定动画的速度曲线。 线性:动画从头到尾的速度是相同的
+    分段执行:动画结束的值除上这个段数,每段执行多少值
+    animation-fill-mode:backwards |  forwards ;设置保持动画结束后的状态
+    animation:动画名称 持续时间 [执行次数(infinite无限) 反向 运动曲线 延迟执行];动画调用
+    3.注意:动画属性有影响,比如先位移后旋转,先旋转后位移的效果是不一样的.
+
+    CSS布局属性
+    column-count:3;分3列显示
+    column-rule:1px dashed red;列分割线
+    column-gap:10px;列间距
+    column-width:10px;列宽
+
+    伸缩布局(了解)
+    1.对块级元素布局十分灵活
+    2.响应式开发中发挥非常大
+    3.x轴为主轴,y轴为侧轴;轴不是固定不变的,通过flex-direction互换
+    4.默认方向是流方向
+
+    display:flex;设置成伸缩盒子;按轴的
+    flex-direction: row(水平方向) | row-reverse(反转行) | column(垂直) |column-reverse(反转列); 主轴方向 
+    justify-content:flex-start | flex-end | center | space-around(父盒子中平分);主轴对其方式
+    align-items:flex-start | flex-end | flex-center;侧轴对齐方式
+    flex:5; 作用在伸缩盒子子盒子元素上
+
+
+    web字体
+    1.不同浏览器所支持的字体不一样
+    2.不用考虑客户是否安装该字体
+    3.ttf字体是win和mac最常见的字体
+    4.otf字体是原始的字体格式,内置在ttf基础上
+    5.woff字体Web字体钟的最佳格式,一个开放的ttf/otf的压缩版本;支持元数据包分离
+    6.eot字体是IE专用字体,可以从ttf创建此格式的字体
+    7.svg字体是基于SVG字体渲染的一种格式
+    8.需要为不同浏览器准备不同的字体格式，字体生成工具(没见过)
+    9.@font-face{font-family:'声明字体'}   用来声明字体
+
+
+
+    h5:视频DOM <video></video>
+    video.webkitRequestFullScreen();元素全屏
+    ele.play();播放
+    ele.pause();暂停
+    video.pause();
+    video.duration;视频总时长
+    video.currentTime;当前进度
+    video.paused;是否播放中
+
+
+
+    拖拽
+    1.在H5规范中,可以通过给元素添加draggable="true"来设置;其中图片和链接是默认开启的
+    2.目标元素:页面中任何一个元素都可以成为目标元素
+    3.拖拽事件
+        ondrag:绑定拖拽元素;整个拖拽过程都回调用
+        ondragstart:绑定拖拽元素;当拖拽开始时调用
+        ondragleave:绑定拖拽元素;当鼠标离开拖拽元素时调用
+        ondragend:绑定拖拽元素;拖拽结束时候调用
+        目标元素事件
+        1.默认情况下,目标元素不允许拖拽元素进入,需要在ondragover事件里添加e.preventDefault();阻止默认行为
+        ondragenter:目标元素,当拖拽元素进入时调用
+        ondragover:目标元素,当拖拽元素停留在目标元素时调用
+
+    web存储
+    1.Sessionstorage
+        生命周期,关闭窗口结束
+    2.Localstorage
+        生命周期,永久;多窗口共享
+
+    API:
+    getItem(key);根据KEY获取value
+    setItem(key, value);键值对存储
+    removeItem(key);根据key删除对应value
+    clear();清空所有数据
+
+
+
+    网络状态
+    window.online;用户连接网络时候被调用
+    window.offline;用户断开网络时候被调用
+
+    应用缓存
+    H5可以轻松创建一个离线缓存文件 cache manifest文件
+    1.可以配置需要缓存的资源
+    2.网络断开仍然可以用
+    3.本地读取缓存,提升访问速度,增强体验
+    4.减少请求次数
+    5.一个普通文本文件,列出应缓存的资源供离线访问,推荐.appcache后缀,添加为MIME类型
+    步骤
+    1.创建缓存文件 01.appcache
+    2.列出缓存清单 CACHE MANIFEST(第一行) CACHE:http://xxx.jpg
+    3.绑定缓存列表 html标签添加属性manifest="01.appcache"
+    CACHE:换行 制定要缓存的静态资源
+    NETWORK:指定联网才能访问的资源
+    FALLBACK:换行 当前页面无法访问时候退回的页面
+
+
+    地理定位
+    1.获取用户地理信息
+    2.基于位置服务 Location Base Service
+    3.获取地理信息方式 IP 三位坐标 wifi
+    4.浏览器会自动以最优的方式去获取用户地理信息
+    API
+    navigator.geolocation
+    navigator.geolocation.getCurrentPosition();获得地理经纬度

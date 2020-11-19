@@ -1,0 +1,107 @@
+一.JS三大家族(系列/事件)
+事件对象/event
+
+offset家族
+1.offset翻译 偏移、补偿、位移的意思,代码上理解检测的意思
+2.本家族获取元素尺寸的方法,取值会进行四舍五入
+3.有5大属性组成offsetWidth;offsetHight;offsetLeft;offsetTop;offsetParent
+4.DOM属性,事件源调用
+
+offsetWidth:获得盒子元素宽 (宽px+内边距+边框)
+offsetHight:获得盒子元素高
+offsetLeft::获取距离父盒子(带有定位属性)的左边距离,如果父级没有定位则以body为准,从父盒子padding开始计算,边框不算
+offsetTop:获取距离父盒子(带有定位属性)的上边距离,如果父级没有定位则以body为准,从父盒子padding开始计算,边框不算
+offsetParent:获取带有定位最近的父级盒子,如果没有定位则返回body
+
+offsetLeft与sytle.left的区别
+1.offsetLeft返回值是数字,sytle.left是字符串,带有px
+2.offsetLeft可以返回没有定位盒子的左侧距离，
+3.offsetLeft offsetTop是只读，sytle.left sytle.top是可读写
+4.如果没有指定过top样式,sytle.left返回空字符串,只能获取行内式的值
+
+scorll家族
+1.有兼容性问题
+2.调用者只有一个,还要看有没声明DTD
+3.赋值给scrollTop属性并不能让浏览器走动
+
+
+scorllWidth:获取盒子的宽 (宽px+内边距   不包括border)
+scrollHeight:获取盒子的高;如果内容超出盒子的本身的高度,高度会改变
+
+只有一个调用者
+scrollTop:网页被卷去的顶部距离
+scrollLeft:网页被卷去的左侧距离
+
+window.pageYOffset(不管DTD)
+window.pageXOffset(不管DTD)
+document.documentElement.scrollTop(声明了DTD)
+document.documentElement.scrollLeft(声明了DTD)
+document.body.scrollTop(未声明DTD)
+document.body.scrollLeft(未声明DTD)
+
+scrollTo(x,y):把页面定位到指定坐标
+
+compatMode:用来判断是否声明了DTD,document调用 backCompat(没有声明) CSS1Compat(声明了)
+
+
+
+client家族 (可视区)
+1.调用者不同,意义不同
+2.盒子调用,指盒子本身;body/html调用,可视区域大小
+
+clientWidth:获取页面可视区域的宽度 (padding+width)不包括margin和border
+clientHeight:获取页面可视区域的高度
+
+window.innerWidth(IE9以上版本)
+window.innerHeight(IE9以上版本)
+document.documentElement.clientWidth(声明了DTD)
+document.documentElement.clientHeight(声明了DTD)
+document.body.clientWidth(未声明DTD)
+document.body.clientHeight(未声明DTD)
+
+
+clientX:鼠标距离可视区域的左边距离(event调用)
+clientY:鼠标距离可视区域的上边距离(event调用)
+clientTop:盒子的上border
+clientLeft:盒子的左boder
+
+
+
+
+
+
+二动画(闪现、匀速、缓动)
+1.本质 目标位置=盒子本身位置+步长
+2.闪现 直接style.left 直接赋值
+3.匀速 使用定时器
+4.缓动 公式:盒子的位置= 盒子的位置+(目标位置-盒子本身的位置)/10  leader = leader+( target - learder)/10
+
+三冒泡
+1.从里面执行到外面,冒泡
+2.从外面执行到里面,捕获
+3.不是所有的事件都能冒泡(blur,fous,load,unload)
+3.冒泡的顺序:div>body>html>document<window
+
+事件委托
+
+
+
+
+四事件对象(event)
+触发DOM上的某个事件时,会产生一个事件对象event,这个对象中包含
+着所有与事件相关的信息
+1.普通浏览器支持 function(e){}有参
+2.IE678支持 function(){}无参
+
+event属性
+timeStamp:返回从页面加载完成到事件生成的日期和时间。
+bubbles:布尔值,提示事件是否是冒泡事件
+button:返回当事件被触发时，哪个鼠标按钮被点击
+pageX:光标相对于该页面的水平位置(IE无)
+pageY:光标相对于该页面的垂直位置(IE无)
+screenX:光标相对于该屏幕的水平位置
+screenY:光标相对于该屏幕的垂直位置
+target:该事件被传送到的对象,就是冒泡上一层被触动的盒子
+type:事件的类型
+clientX:光标相对于该浏览器的水平位置(当前可见区域)
+clientY:光标相对于该浏览器的垂直位置(当前可见区域)

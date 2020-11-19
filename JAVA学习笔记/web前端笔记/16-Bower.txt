@@ -1,0 +1,20 @@
+bower:
+1.基于NodeJs的一个静态资源管理工具,解决大型网站种静态资源的依赖问题
+2.依赖NodeJs环境和Git工具
+3.简单来说就是帮我们下载JS框架的
+4.解决框架依赖下载
+
+
+nodejs
+用来管理nodejs开发的工具(js文件)的管理器
+
+
+相关命令
+1. npm install -g bower  安装 -g代表每个用户 不加就安装在当前目录下
+2. bower search jquery 查看资源信息
+3. bower install  jquery#1.1.6 安装下载资源,通过#可以指定版本号
+4. bower info jquery 查看资源信息
+5. bower uninstall jquery 卸载资源
+6. bower init 初始化,用来记录资源信息和依赖
+
+

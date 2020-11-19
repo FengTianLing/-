@@ -1,0 +1,156 @@
+GitHub:软件项目托管平台。只支持Git版本库格式托管
+1.版本控制软件
+2.解决团队开发中的代码管理的问题
+3.还有一个相对的GitLab 免费自己搭建的仓库服务器
+
+简单术语
+*提交:commit
+*拉取:pull
+*克隆:clone
+*推送:push
+*远程:remote
+*工作区:就是你电脑上看到的目录,隐藏目录.git不是工作区,是版本库
+*版本库：工作区里面的隐藏目录.git就是版本库,其中存了很多东西,醉重要的
+就是stage(暂存区),还有git为我们自动创建了第一个分支mater,以及指向master
+的一个指针HEAD
+
+GitHub的安装
+1.官网下载Git-x.x.x-32-bit双击安装
+2.安装过程中什么都不用改,一直下一步至完成
+
+GitHub的使用
+1.先创建本地仓库
+	(1)任意路径下创建一个目录(自己定义名称)
+	(2)命令:git init  初始化仓库完成
+2.创库创建完成之后,就可以再仓库里面添加修改文件了
+3.每次添加或修改都要先把文件添加进入缓存区中,然后才能进行提交
+	(1)添加新建/修改进入缓存区 git add readme.txt
+	(2)提交缓存区内容 git commit -m "first commit"  (-m:代表提交注释)
+4把本地仓库的内容推送到远程服务器
+前提工作:登陆GitHub创建一个仓库
+	(1)创建SSH Key：再用户主目录下看下有没.ssh目录如果有,看下有没有
+	id_rsa(私钥不能泄露)和id_rsa.pub(公钥可以告诉他人),如果有跳过此步骤,
+	如果没有执行命令:ssh-keygen -t rsa -C "330905681@qq.com"
+	(2)指定全局远程仓库用户名 git config --global user.name "Server0308"
+	(3)指定全局远程仓库email  git config --global user.email "330905681@qq.com"
+	(4)关联远程仓库 git remote add origin https://0.0.0.0/Server0308/demo.git
+	(5)内容推送 git push -u origin master  (第一次推送要加-u,以后可以忽略 git push origin master) origin是远程仓库的变量
+	(6)拉取分支:git pull 
+	   
+--------------------------------------------------------
+以上的操作是现有本地仓库,然后才和远端仓库关联
+下面先有远程仓库,然后从远程仓库克隆出来一个本地库
+1.创建一个远程仓库,赋值远程仓库地址
+2.任意盘符或文件打开命令界面 git clone https://0.0.0.0/Server0308/demo.git
+3.这样再本地目录下就生成了demo仓库目录了
+
+
+分支策略
+1.首先master主分支应该是非常稳定的,用来发布最新版本
+2.一般情况下不允许再主分支上面工作,都会再主分支上创建
+一个新的分支进行工作。
+3.新分支工作完后,才合并到master主分支上
+4.最后我们推送的分支也是主分支,与远程库同步
+
+分支管理策略
+1.通常情况下,一般使用Fast forward模式来合并分支
+2.但这种方式当删除分支后,会丢掉分支的信息
+3.如果不想把分支信息丢掉,合并分支时加入 --no-ff -m"描述"
+git merge --no-ff -m"描述" name
+
+
+多人协助工作模式冲突解决
+1.首先,可以试图用推送命令推送自己的修改
+2.如果推送失败,则因为远程分支比你的本地更新早,则需要用git pull试图合并
+3.如果pull失败,可能是本地分支没有和远程库分支关联
+git branch --set upstream dev origin/dev
+4.如果合并有冲突,则需要解决冲突,并本地提交。再进行分支推送
+git push oringin name分支名称
+
+注意:
+1.多人协助模式,要把每个人电脑的key公钥都要添加到github上
+2.如果别人也要再我的分支上操作,我就必须要把我的分支也推送到远程仓库
+3.当我的分支推送到远程库,小伙伴就可以从远程可以分支到本地
+git checkout -b dev origin/dev  (远程库名称/远程分支)
+
+
+
+解决冲突问题(conflicts)
+1.先尝试合并分支,如果提示失败会进入(master|MERGING)合并模式
+2.cat name 查看冲突内容,删除掉 [<<<<HEAD  ==== >>>>]分支name
+3.最后把解决冲突后的文件添加到暂存区--commit提交
+4.合并模式提交后,主分支就是最新内容。
+5.再进入其他子分支再进行合并主分支 git merge master
+
+
+
+Git常用命令
+
+git init --bare  创建一个空仓库(往上的仓库不用这个命令)
+
+git clone 远程仓库 [重命名仓库]
+
+git add a.txt
+添加内容到暂存区,只有暂存区的内容才能进行提交
+
+git commit -m"提交描述"
+提交任务,提交到本地仓库
+
+git status
+查看当前版本库(仓库)状态,是否有未提交文件
+
+------------------------------------------
+git log
+查看历史信息
+
+
+git reflog
+查看提交过的版本(包含有回退前的最新版本)
+
+git reset -hard HEAD^
+git reset -hard HEAD~100
+git reset -hard 提交ID
+版本回退 ^代表回退到上一个版本 ^^代表回退到上上个版本,以此类推
+~100代表回退到上第100个版本
+提交ID:通过提交ID来回退版本
+
+------------------------------------------
+
+
+
+git checkout -- a.txt
+撤销当前没add的全部修改.如果删除掉了文件,再没提交任务之前也可以用来撤销删除。
+不加--切换分支;就是把将暂存区的内容还原到工作区
+
+<!--分支-->
+查看分支:git branch
+
+创建分支:git branch name
+
+切换分支:git checkout name
+创建或切换:git branch -b name
+
+删除分支:git branch -d name     -d如果是-D代表强制删除
+
+合并分支:git merge name   当前所在分支跟name分支合并
+
+<!--远程仓库-->
+查看远程仓库信息:git remote
+查看远程仓库详细信息:git remote -v
+查看远程仓库变量详细信息 git remote show 远程仓库
+绑定远程仓库地址变量:git remote add 变量名 远程仓库地址
+如果是克隆操作,默认会添加oringin变量指向远程仓库地址
+
+推送分支:git push origin master[:远程分支]
+拉取分支:git pull 
+推送指定仓库:git push 远程仓库 master
+拉取指定仓库:git pull 远程仓库 master
+
+<!--隐藏-->
+隐藏当前工作区:git stash
+显示隐藏:git stash list
+恢复工作区:git stash apply (恢复不删除)
+删除隐藏内容:git stash drop
+git stash pop (恢复并删除)
+----------------------------------------------------
+

@@ -1,0 +1,147 @@
+html 超文本标记语言
+
+1.html与htm的区别
+本质上没有区别。早期的时候,系统只支持3个字母的后缀名,所以当时叫htm
+
+2.标签的分类
+    2.1：单标签与双标签
+    2.2：块标签与行标签
+
+3.主流开发工具
+    3.1：DW
+    3.2：sublime
+    3.3：WebStorm10
+
+4.快速建立html结构文档
+    4.1：输入-->html:xt-->Ctrl+E (快速建立4.0的文档)
+    4.2：输入-->!-->Ctrl+E (快速建立5的文档)
+
+5.常用快捷键
+    tab或Ctrl+E 代码补全功能
+    Ctrl+shift+D 快速复制一行
+    Ctrl+shift+K 快速删除一行
+    Ctrl+鼠标左键单击 集体输入
+    Ctrl+H 替换
+    Ctrl+/ 代码注释掉
+    Ctrl+L 快速选中一行
+    Ctrl+shift+上下方向键 移动代码
+
+标签
+<br /> 换行标签
+
+<hr /> 水平线标签
+
+<P></P> 段落标签,段落与段落之间有行间距
+
+<h1-6></h1-6> 标题标签
+在一个页面中别写两个h1标签.设计到SEO优化
+
+<font></font> 文本标签
+
+<strong></strong> 加粗标签
+
+<b></b>  加粗标签
+
+<em></em>  文字倾斜
+
+<i></i>  文字倾斜
+
+<del></del> 文本删除线
+
+<s></s> 文本删除线
+
+<ins></ins> 文本下划线
+
+<img src="图片来源" alt="替换文本" title="提示文本" width="100" height="200"/> 
+图标标签。alt属性会对seo优化;宽高属性,等比例缩放
+
+
+
+<a href="去往的连接地址" title="提示文本" target="_blank"></a>  
+超链接标签 target默认_self当前窗口打开页面;_blank在新窗口打开
+    锚点:点击目标,跳转目标
+        1.跳转目标标签添加id属性
+        2.a标签href书写<a href="#idName">锚点</a>
+    空连接<a href="#"></a> #号是连接到自己本身
+    文件下载:下载也可以使用a标签,但工作中不这么用
+    超链接的优化写法:在head标签中加入<base target="_blank" />;全局更改a标签的默认属性
+
+<ul type="square[disc,circle]"><li></li></ul> 无序列表
+<ol type="1[a,A,i]" start="开始数字"><li></li></ol> 有序列表
+
+
+<dl><dt>小标题</dt><dd>解释标题(多个)</dd></dl> 自定义列表
+
+<embed src="音频来源" type="" hidden="true"/> 背景音频标签 mp3 hidden隐藏默认样式
+
+<marquee behavior="滚动方式[slide,alternate,scorll]" direction="down,loop"></marquee>  滚动标签;被滚动标签包含
+
+
+
+6.相对路径与绝对路径
+    6.1：相对路径;相对于当前操作的文件的路径 
+    [.]点表示当前文件路径开始
+    [..]点点表示上一层路径
+    6.2:绝对路径;当前项目的路径开始;一般很少使用
+    [/]表示当前项目根路径开始
+
+7.字符实体(略过)
+
+8.<head></head>相关标签
+    8.1 <mete charset="字符集" />
+        <meta name="keywords" content="SEO关键字优化"/>
+        <meta name="description" content="网页描述SEO"/>
+        <meta http-equiv="refresh" content"5;http://www.baidu.com" />网页重定向
+
+    8.2<link rel="stylesheet" href="/css/style.css">链接外部样式表
+    <link rel="icon" href="/favicon.png">图标
+
+9表格
+
+<table border="1" cellspacing="单元格外边距" cellpadding="单元格内边距"></table>  表格标签
+<tr></tr> 表格行标签
+<td></td> 表格列标签
+表格属性:
+    border:边框
+    cellspacing:单元格外边距;单元格与单元格之间的距离;默认值是2
+    cellpadding:单元格内边距;单元格与内容的距离
+    bgcolor:背景色
+    bordercolor:边框颜色
+    align:水平对齐方式[center,left,right];作用在talbe上表格与页面居中;作用在tr上,所有td起作用;作用在td上;单个单元格起作用
+    valign:垂直对其方式[center,bottom,top,middle]
+    colspan:列合并
+    rowspan:行合并
+表格的标准结构包含有thead,tbody,tfoot
+
+10.表单
+
+<form action="表单提交地址" method="提交方式[get,post]"></form> 一个表单
+<input type="text[password,radio,checkbox,submit,reset,file,image]" /> 表单域
+H5中name属性还有url;date;time;email;number;range
+
+
+<select name="" multiple>
+    <option value="">下拉多选1</option>
+</select>
+multiple:下拉多选
+<optgroup label="分组标题"></optgroup>下拉分组
+
+<textarea name="" cols="字符长度" rows="字符行数"></textarea> 多行文本框
+resize:none css属性,设置成不允许拉大缩小
+
+<fieldset></fieldset> 表单分组标签
+<legend>分组标题</legend>  分组标题标签
+
+
+字符实体
+&emsp; 一个汉字的空格
+&ensp; 半个汉字的空格
+
+
+11.总结
+标签语义化:
+页面结构合理;有利于SEO;方便其他设备解析;便于团队开发和维护
+1.尽可能少的使用无予以的标签div和span
+2.在予以不明显时,既可以使用div或者p时,尽量用p,
+3.不要使用纯样式标签,如b,font,u等,改用CSS控制
+4.需要强调的文本,可以包含在strong或者em标签中,不要使用b,i等标签

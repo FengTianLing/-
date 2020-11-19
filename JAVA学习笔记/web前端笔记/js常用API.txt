@@ -1,0 +1,224 @@
+typeof(); 判断数据的类型
+isNaN();判断是不是一个NaN
+Array.isArray(arr1):判断是不是一个数组
+
+
+Date对象:
+1.用来保存一个当前系统时间的对象,对象创建后,不会跟这系统时间而改变
+2.创建指定日期 Date("2018/01/01 00:00:00")
+getDate():返回月中的天
+getDay():返回周中的天
+getMonth():返回月份
+getFullYear():返回年份
+getHours():返回时
+getMinutes():返回分
+getSeconds():返回秒
+getMillseconds():返回毫秒
+getTime():返回毫秒数
+now():返回毫秒数
++new Date():返回毫秒数
+valueOf():返回毫秒数
+
+
+Math对象
+所有的方法都是静态方法,不用new
+abs(x):取绝对值
+ceil(x):向上进1取整
+floor(x):取整数
+max(x,y):返回两个数的最大值
+min(x,y,..):返回两个数的最小值或多个数值的最大值
+pow(x,y):返回x的y次方
+random():返回0-1之间的随机数
+round(x):四舍五入
+
+
+
+数据类型转换
+字符串类:
+创建一个字符串,注意new是直接创建一个新的String对象
+String(字符串):静态构造方法 
+String(数字);静态构造方法 
+toString():每个对象都有的方法,转字符串
+
+数字类
+Number():创建一个数字,静态构造方法
+parseInt(数字[数字字符串]):浏览器的静态方法,讲一个数字字符串转数字 整数
+parseFloat(数字[数字字符串]):静态方法,将一个小数字符串转成一个小数
+
+Number与parseInt区别:
+Number给的不是一个正常数字字符串会报错
+parseInt给的字符串只要前面是数字，就会正确识别前面的数字
+
+布尔类
+Boolean():静态构造方法
+任何值都可以进行转化为布尔值
+
+
+
+Sting类行
+split(","):字符串转数组
+charCodeAt():返回UNICODE编码
+indexOf():给字符查索引
+lastIndexOf():从后往前查询字符位置
+charAt():给索引查单个字符
+search(rege):通过正则查询匹配字符
+trim():去掉字符串两端空白
+toUpperCase():转大写
+toLowerCase():转小写
+slice(start,end):截取字符串,按索引
+substr(start,end):截取字符串,按长度
+substring():不太常用
+concat(s):字符串连接
+replace(reg,"替换文本"):替换;可以传入正则;传入字符串自会替换第一个匹配上的
+
+JSON.parse(jsonstr); 可以将json字符串转换成json对象 
+JSON.stringify(jsonobj); 可以将json对象转换成json对符串
+-------------------------
+通过字符串快速创建标签的一些方法(了解)
+anchor():创建a标签
+link(String url):创建a标签 返回字符串
+big():创建big标签
+sub():创建sub标签
+sup():创建sup标签
+bold():创建b标签
+
+encodeURIComponent(s):编码
+decodeURIComponent(s):解码
+
+
+数组
+lenght:数组的属性,查看数组的长度;在JS中可以赋值,用来清空数组
+concat(arry):数组的合并,传入一个需要合并的数组
+栈操作:先进后出
+push(n):向数组的末尾添加元素;压入一个元素
+pop():数组的末尾移除元素;弹出一个元素
+队列操作:先进先出
+unshift():添加元素
+shift():移除元素;取出首个元素
+reserse():数组反转;反转数组中的元素
+sort():数组的排序(升序);不建议使用有bug
+sort(function(){回调函数}):传入排序规则,传入一个函数
+indexOf():判断元素所在素组的位置
+join(separator):把数组转成字符串,默认逗号分隔;等同于.toString();separator:分隔器
+split(","):字符串转数组
+slice(start[,end]):截取数组得到一个新数组
+splice(start[,end,"替换元素",...]):截取或替换数组得到一个新数组,会改变原有数组
+from(伪数组):把伪数组转成真
+
+数组的迭代器
+Boolean array.every(function(item,index,arr){});对数组中的每一项执行函数,如果都返回true,则数组返回true;
+如果有一项返回false,则停止迭代,则数组返回false
+
+Boolean  array.some(function(item,index,arr){}):对数组中的每一项执行函数,如果有一项返回true,则该数组返回true
+
+Array array.filter(function(item,index,arr){}):对数组中的每一项执行函数,该函数返回结果是true的元素组成新数组
+
+Array array.map(function(item,index,arr){return item}):对数组中的每一项执行函数,该函数的返回结果组成新的数组
+
+array.forEach(function(item,index,arr){}):遍历数组
+
+array.reduce((a,b)=>{}[,default]);数组函数累加器,
+1.第一次执行是数组中下标的0,1的元素,第二次执行是a是上一次的计算结果,b就下标元素2
+2.第一次执行a,就是默认值,b就是数组中的下标0元素,第二次执行a,是上一次的计算结果,b是下标1元素
+
+array.find(function(){return false}):对数组中的成员依次执行函数，直到返回第一个返回true的成员,然会这个对象,如果没有符合,返回undefined
+
+array.findIndex(function(){return false}):和find方法类似,不过这个是返回数组的下标未知,如果不符合返回-1
+
+array.includes(数组元素):与find类似,如果匹配到元素,返回true
+
+
+
+进制转换
+parseInt(值,进制):给定进制数,告诉API几进制,转换成10进制的方法
+toString(进制);把10进制的值转换成任意进制
+
+
+定时器
+1.使用原则,执行定时器之前先清楚定时器.不然某些问题上定时器会叠加
+立即执行;循环循环执行
+var timerld=setInterval(function(){},8000);每个n秒执行一次函数;
+clearInterval(timerld)
+
+等待时间过去之后执行;炸弹定时器
+var timerld=setTimeout(function(){},8000);每n秒执行一次函数
+clrearTimeout(timerld);
+注意
+1.方法可以替换成字符串的方法,带参数 
+
+
+
+###
+ES6语法
+1.let变量
+    (1)let修饰的变量,只作用于自己的当前作用域内{}
+    (2)外面访问不到子作用域被let修饰的变量
+    (3)块级作用域
+    (4)有点类似于方法的局部变量
+2.const常量
+    (1)被const修饰的变量属于一个常量
+    (2)无法修改变量的值
+
+3.字符串操作
+str.includes():等同于java的indexOf()
+str.startsWith('str');判断字符串是不是以str开头
+str.endWith('str');判断字符串是不是以str结尾
+str.repeat(n);循环拼接本生
+``:字符串模板
+    (1)可以用来做字符串拼接 例如: `我爱你${name},呵呵`
+
+
+4.结构表达式
+    const arr = [10,20,30];   const [x,y,z] = arr; console.log(x)//20
+    const o1 = {name:"zs",age:18};   const {name,age} = o1;  或者 const {name:name1:age:age2}  console.log(name1);//zs
+    1.结构 左边的数据类型要和需要结构的对象结构类型一样
+    2.结构相当于给对象的属性重新赋予新的变量名称 
+    3.函数也可以使用结构表达式,在参数列表使用
+
+
+5.方法的优化
+    1.定义方法参数列表可以赋予默认值 function run(a,b=1){..};  run(1);//调用
+    2.箭头表达式 let fun = ()=>{}  //参数列表只有1个参数 或者 方法体只有一行代码的时候,可以省略() {}
+    对象里面的属性定义函数也可以这么写,甚至于可以  {name:"zz",fn1(){}}  注意fn1属性是没有用冒号的
+    对象里面使用箭头表达式 this是外面的windows
+
+
+6.对象的扩展方法
+Object.keys(obj):获取对象的所有key形式的数组
+Object.values(obj):获取对象所有value形成的数组
+Object.entrles(obj):获取对象所有key和val形成的二维数组 [[key,val],[key,val]]
+Object.assign:(目标对象,...src对象):将多个src对象的值拷贝到目标对象中(浅拷贝)
+
+
+
+
+
+RegExp:正则表达式对象
+1.表达式要用两个/包围
+2.表达式不需要用引号包围
+构造方法一:var reg = new RegExp(/表达式/);
+构造方法二:var reg = /表达式/;
+
+test(str);判断给定的字符串是否符合正则表达式
+
+.:表示非换行和回车任意字符 [^\n\r]
+\d:表示任意数字 [0-9]
+\D:表示非任意数字 [^0-9]
+\s:表示空白字符 [\t\f\r\x0B]
+\S:表示非空白字符 [^\t\f\r\x0B]
+\w:表示单词字符 [a-zA-Z_0-9]
+\W:表示非单词字符 [^a-zA-Z_0-9]
+
+^:如果表达式的开始位置,表达从这里开始匹配,如果写在中括号里面,则表示非关系
+[]:表示只要包含中括号里面的任意一个字符,只要有一个匹配上了就成立
+-:表示范围,A-Z
+():表示一个整体,括号里面的内容必须全匹配,不能多也不能少
+$:表示匹配结束
+
+*:重复0次或更多  >0
++:重复1次或功能多 >=1
+?:重复0次或1次 0||1
+{n,m}:至少出现n个,最多出现m个
+
+i:忽略大小写
+g:全局查找

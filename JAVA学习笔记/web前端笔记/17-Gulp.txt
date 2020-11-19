@@ -1,0 +1,26 @@
+在开发中,往往还写很多注释.名字很长的变量名。
+项目上线后要把这些注释去掉,变量名压缩,换行符压缩
+这个叫做项目构建。项目构建工具有很多,比如:Grunt,Gulp,F.I.S,webpack
+
+Gulp:项目构建工具
+1.基于Node.jsk开发的构建工具,借助Gulp插件可以实现不同的构建任务(压缩CSS,JS等)。
+
+
+安装:
+npm install -g gulp
+
+
+
+
+require(''):引入外部js文件
+
+开发流程
+1.进入项目本地路径
+
+2.创建任务清单文件  gulpfile.js
+
+3.引入本地安装 var gulp = require('gullp');
+
+gulp.task('less',function(){
+    console.log()
+});

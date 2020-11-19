@@ -1,0 +1,97 @@
+Shell
+1.俗称'壳',区别于Kernel(核)
+2.命令解析器。类似cmd
+3.window的cmd PowerShell; Linux的Xshell
+4.Linux默认使用bash命令行
+
+
+bash命令格式
+命令 [-options可选参数] [参数]
+-option:可多个
+参数:可多个
+例如命令解压缩: tar -zxvf demo.tar.gz
+
+
+
+常用命令
+pwd 查看当前路径
+cd 切换目录
+ls 查看当前目录下的内容
+mkdir 创建目录
+rm 删除
+rmdir 删除空目录(不常用)
+mv 移动(剪切)/重命名
+cp 拷贝
+touch 创建文件
+cat 查看文件全部内容
+head 查看文件前N行内容
+tail 查看文件后n行内容
+more或less 分页或滚动查看文件内容 回车(滚动)/空格(翻页) 
+vi 编辑或新建文本
+tab 命令自动补全键 连续按两下查看...  
+history 查看操作命令历史操作
+wget 下载
+>> 或 > 重定向命令输出到文件 >(覆盖)  >>(末尾追加)
+echo 输出字符串
+whoami 查看当前用户
+| 管道符号 可以将多个命令连接使用 上一次(命令) 的执行结果当成下一次命令的参数
+--help  每个命令的帮助文档
+curl 发网络请求
+grep 正则匹配内容  例如 grep i index.html 在index.html文件查找i
+
+
+vi编辑器相关命令(3种模式)
+命令模式  插入模式  底行模式 
+i 或 insert  切换插入模式
+shift + :  切换底行模式
+esc 退出命令到模式
+底行模式:q       退出
+底行模式:w       保存
+底行模式:!       强制
+底行模式:set num 设置行号
+底行模式:e!      撤销更改,返回到上一次保存状态
+
+命令模式:ZZ(大写)  保存退出
+命令模式:u       撤销操作
+命令模式:dd      删除当前行
+命令模式:yy      复制当前行
+命令模式:p       粘贴内容
+选中后按 y 复制  按p 粘贴  按u撤销
+(不需要进入insert模式)
+
+
+
+
+
+[-option可选参数]
+-a  表示 all   所有/包括隐藏
+-l  表示 list  列表形式
+-r  表示 递归 多层目录结构
+-f  表示 强制 
+-x  表示 解压缩
+-z  表示 解压方式
+-v  表示 显示处理文件
+
+
+
+useradd xxx 创建用户
+id xxx 查看用户
+passwd xxx 设置用户密码
+su - xxx 切换用户与环境
+exit 退出当前用户回到root用户环境
+chown xxx(用户):xxx(用户组)  filename  修改文件的所属用户 chown user1:root  a.tar.gz
+chmod 755 filename  修改文件的权限 
+
+
+硬盘信息查看
+df -h [目录] 查看分区情况
+lsblk  查看多硬盘分区结构
+
+
+
+权限
+
+
+小知识
+1. .tar.gz是一个压缩包，.tar只是打包而没有压缩。
+

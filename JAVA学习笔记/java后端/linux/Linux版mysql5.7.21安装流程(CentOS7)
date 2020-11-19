@@ -1,0 +1,117 @@
+1.官方下载Linux版mysql5.7.20
+
+2.解压文件到/usr/local下，并改名mysql
+
+3.执行groupadd mysql  创建用户组mysql
+
+4.执行useradd -r -g mysql mysql 创建系统用户，-r参数表示mysql用户是系统用户
+
+5./usr/local目录下执行如下两行命令，设置权限
+chown -R mysql mysql/
+
+chgrp -R mysql mysql/
+
+6.rpm -qa|grep mariadb   检查是否安装了mariadb
+
+7.rpm -e --nodeps mariadb-libs-5.5.56-2.el7.x86_64   如果装了执行卸载
+
+
+8.初始化数据库 进入mysql目录
+
+创建数据库目录 mkdir data  
+
+bin/mysqld --initialize --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data --lc_messages_dir=/usr/local/mysql/share --lc_messages=en_US
++eqNPgjwD8Xd
+
+9.初始化数据库后会得到默认登陆密码 localhost: 后面的这一串便是你首次登陆mysql需要的初始密码
+
+
+
+10.进入../mysql/bin目录启动服务,看是否成功
+./mysqld_safe --user=mysql &
+    10.1.如果提示文件不log文件不存在则手动创建
+
+
+11.登陆mysql 
+/usr/local/mysql/bin/mysql -u root -p
+密码是上面生成的初始化密码,到这一步,说明已经可以使用MySQL了
+
+
+12.设置新密码
+mysql>  set password=password("new password");
+mysql>  set password=password("nhy6&UJM");
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+
+13.设置开机启动,进入support-files目录
+ cp mysql.server /etc/rc.d/init.d/mysqld 
+继续执行以下
+ chmod +x /etc/rc.d/init.d/mysqld  增加mysqld服务控制脚本执行权限
+ chkconfig --add mysqld  将mysqld服务加入系统服务
+ chkconfig --list mysqld  检查服务系否已经生效,最后一行,如果能看到吗，代表成功了
+
+ 以后可以使用service命令控制mysql的启动和停止，
+ 命令为：service mysqld start和service mysqld stop
+
+14.启动服务(请先kill掉第10步骤的进程)
+这里貌似kill死，kill了又会重新先启动,我重启系统服务就不存在了
+service mysqld start
+
+有可能执行的时候会报错。这是因为mysql默认安装在/usr/local目录下
+如果安装在/usr/local目录下则会正常启动和关闭，不会报错
+此时需要修改/etc/init.d/mysqld文件，保存后退出
+basedir=/data/mysql
+datadir=/data/mysql/data
+
+这时候在启动就ok了
+
+
+12.配置全局变量
+vi /etc/profile
+在文件底部添加如下两行配置，保存后退出(注意路径,这里是我自己的)
+PATH=/usr/local/mysql/bin:/usr/local/mysql/lib:$PATH
+export PATH
+
+13.设置环境变量立即生效
+source /etc/profile
+
+到这里基本全部完成,就可以使用数据库了。
+
+
+
+
+
+/*多余配置,其他教程用到的,没用上。如果要设置*/
+配置数据库
+    10.1 kill -9 n  杀死服务。这里貌似杀不死，杀死了又会重新先启动,我重启系统服务就不存在了
+    8.1.进入/usr/local/mysql/support-files/目录下
+    8.2.查看是否存在my-default.cnf文件，如果存在直接copy到/etc/my.cnf文件中 
+    cp -a ./support-files/my-default.cnf /etc/my.cnf
+    8.3.如果不存在,则直接修改/etc/my.cnf
+[mysqld]
+character_set_server=utf8
+init_connect='SET NAMES utf8'
+basedir=/usr/local/mysql
+datadir=/usr/local/mysql/data
+socket=/tmp/mysql.sock
+#socket=/var/lib/mysql/mysql.sock
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+
+额外设置
+开启远程客户端连接
+赋予权限
+1.GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'%'IDENTIFIED BY '123456' WITH GRANT OPTION; 
+GRANT ALL PRIVILEGES ON *.* TO 'it'@'%'IDENTIFIED BY 'nhy6&UJM' WITH GRANT OPTION;
+
+查看3306端口
+netstat -nupl|grep 3306
+
+开放3306端口并重启防火墙
+1
+firewall-cmd --permanent --add-port=3306/tcp
+firewall-cmd --zone=public --add-port=22/tcp --permanent
+firewall-cmd --zone=public --remove-port=3306/tcp --permanent  删除
+2
+firewall-cmd --reload
